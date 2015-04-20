@@ -1,5 +1,7 @@
 *.log
 *.pot
 *.pyc
+*.swp
+*.swo
 __pycache__/
 local_settings.py
