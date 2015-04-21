@@ -24,7 +24,9 @@ var CommentCollection = Backbone.Collection.extend({
 
     comparator: function(comment) {
         return comment.get('datetime');
-    }
+    },
+
+    url: '/scav_board/api/comments/'
 });
 
 var CommentThread = Backbone.Model.extend({
@@ -33,9 +35,15 @@ var CommentThread = Backbone.Model.extend({
         "comments": new CommentCollection(),
         "itemNumber": -1,
         "numNew": 2
+    },
+    
+    parse: function(response) {
+
+
     }
 });
 
 var ThreadCollection = Backbone.Collection.extend({
     model: CommentThread,
+    url: '/scav_board/api/items/'
 });
