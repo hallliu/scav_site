@@ -60,9 +60,6 @@ var CommentThreadView = Backbone.View.extend({
         this.commentThread = commentThread;
         this.$el.html(this.baseHtml);
         this.$el.on("hide.bs.modal", _.bind(this.close, this));
-        this.$("textarea").one("click", function() {
-            $(this).val("");
-        });
 
         this.$(".show-more").hide();
 

@@ -62,9 +62,9 @@ var CommentThread = Backbone.Model.extend({
         var cc = new CommentCollection([], this.get('itemNumber'));
         cc.fetch();
         this.attributes["comments"] = cc;
-        this.attributes['serverPolling'] = setTimeout(function() {
-            cc.fetch();
-        }, 1000);
+        this.attributes['serverPolling'] = setInterval(_.bind(function() {
+            cc.fetch({delete: false});
+        }, this), 5000);
     },
 
     teardownComments: function() {
@@ -80,4 +80,27 @@ var ThreadCollection = Backbone.Collection.extend({
     initialize: function(pageNum) {
         this.url = '/scav_board/api/page/' + pageNum;
     }
+});
+
+$(document).ready(function() {
+    $('#login-form').submit(function(event) {
+        event.preventDefault();
+        var options = {
+            method: 'POST',
+            data: {
+                'email': $(event.target).find('#loginEmail').value,
+                'password': $(event.target).find('#loginPassword').value
+            },
+            success: function() {
+                console.log("login success");
+                console.log(arguments);
+            },
+
+            error: function() {
+                console.log("login fail");
+                console.log(arguments);
+            }
+        };
+        $.ajax('/scav_board/login/', options)
+    })
 });

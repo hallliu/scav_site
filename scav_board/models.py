@@ -1,10 +1,5 @@
 from django.db import models
-
-
-class User(models.Model):
-    username = models.CharField(max_length=64, db_index=True, unique=True)
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
+from django.contrib.auth.models import User
 
 
 class Item(models.Model):

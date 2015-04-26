@@ -1,21 +1,12 @@
 import json
-from .models import User, Item, Comment
+from .models import Item, Comment
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 
-def user(request, username):
-    requested_user = User.objects.get(username=username)
-    returned_data = json.dumps({
-        'id': requested_user.id,
-        'first_name': requested_user.first_name,
-        'last_name': requested_user.last_name
-    })
-    return HttpResponse(returned_data, content_type='application/json')
 
-def users_posts(request, username):
-    requested_user = User.objects.get(username=username)
-    # noinspection DjangoOrm
-    all_posts_by_user = requested_user.comment_set.values_list('id', flat=True)[:request.GET.get('limit', 10)]
-    return HttpResponse(json.dumps(list(all_posts_by_user)), content_type='application/json')
+def homepage_view(request):
+    return HttpResponse("Hello")
 
 
 def items_on_page(request, page_num):
@@ -55,3 +46,17 @@ def item(request, item_number):
         'description': requested_item.description,
     })
     return HttpResponse(returned_data, content_type='application/json')
+
+
+def user_login(request):
+    raise Exception()
+    email = request.POST["email"]
+    password = request.POST["password"]
+    user = authenticate(email=email, password=password)
+    if user is None:
+        return HttpResponse(json.dumps({'success': False}), content_type='application/json', status=501)
+    else:
+        #login(request, user)
+        return HttpResponse(json.dumps({'success': True}), content_type='application/json')
+
+
