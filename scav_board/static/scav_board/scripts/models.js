@@ -12,6 +12,7 @@ var Comment = Backbone.Model.extend({
         result["text"] = response["text"];
         result["author"] = response["author_name"];
         result["datetime"] = new Date(response["timestamp"]);
+        result['id'] = response['id'];
         return result;
     }
 });
@@ -43,7 +44,6 @@ var CommentCollection = Backbone.Collection.extend({
 var CommentThread = Backbone.Model.extend({
     defaults: {
         "header": new ThreadHeader(),
-        "comments": new CommentCollection(),
         "itemNumber": -1,
         "numNew": 2
     },
@@ -54,10 +54,30 @@ var CommentThread = Backbone.Model.extend({
         result["itemNumber"] = response["item_number"];
         result["numNew"] = -1; // TODO: Change this to reflect server side stuff once users get set up
         return result;
+    },
+
+    // This function goes and actually creates the contents of the comment thread, then starts polling
+    // for changes on the database.
+    initializeComments: function() {
+        var cc = new CommentCollection([], this.get('itemNumber'));
+        cc.fetch();
+        this.attributes["comments"] = cc;
+        this.attributes['serverPolling'] = setTimeout(function() {
+            cc.fetch();
+        }, 1000);
+    },
+
+    teardownComments: function() {
+        clearTimeout(this.attributes['serverPolling']);
+        this.attributes['comments'] = null;
     }
+
+
 });
 
 var ThreadCollection = Backbone.Collection.extend({
     model: CommentThread,
-    url: '/scav_board/api/items/'
+    initialize: function(pageNum) {
+        this.url = '/scav_board/api/page/' + pageNum;
+    }
 });

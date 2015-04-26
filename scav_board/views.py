@@ -13,6 +13,7 @@ def user(request, username):
 
 def users_posts(request, username):
     requested_user = User.objects.get(username=username)
+    # noinspection DjangoOrm
     all_posts_by_user = requested_user.comment_set.values_list('id', flat=True)[:request.GET.get('limit', 10)]
     return HttpResponse(json.dumps(list(all_posts_by_user)), content_type='application/json')
 

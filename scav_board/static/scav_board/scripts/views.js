@@ -59,7 +59,7 @@ var CommentThreadView = Backbone.View.extend({
     initialize: function(commentThread) {
         this.commentThread = commentThread;
         this.$el.html(this.baseHtml);
-        this.$el.on("hidden.bs.modal", this.close());
+        this.$el.on("hide.bs.modal", _.bind(this.close, this));
         this.$("textarea").one("click", function() {
             $(this).val("");
         });
@@ -69,6 +69,7 @@ var CommentThreadView = Backbone.View.extend({
         this.headerTitle = this.$el.find('.item-title');
         this.itemText = this.$el.find('.item-text');
         this.comments = this.$('.list-group');
+        this.commentThread.initializeComments();
 
         this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
         this.listenTo(this.commentThread.get("header"), 'change', this.render);
@@ -76,6 +77,7 @@ var CommentThreadView = Backbone.View.extend({
 
     addComment: function(comment) {
         var newCommentView = new commentView({model: comment});
+        newCommentView.listenTo(this, "close_thread", newCommentView.remove);
         var commentLength = this.commentThread.attributes.comments.length; 
         this.comments.append(newCommentView.render().$el);
 
@@ -115,7 +117,14 @@ var CommentThreadView = Backbone.View.extend({
     close: function() {
         this.$el.off();
         this.remove();
+    },
+
+    remove: function() {
+        this.trigger('close_thread');
+        this.commentThread.teardownComments();
+        Backbone.View.prototype.remove.apply(this);
     }
+
 });
 
 

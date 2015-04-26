@@ -103,7 +103,7 @@
 
         <script>
             var header = new ThreadHeader({"title": "poop", "text":"poop2"});
-            var cthread = new CommentThread({"header":header});
+            var cthread = new CommentThread({"header":header, "itemNumber": 14});
             var allThreads = new ThreadCollection();
             var pv0 = new pageView(allThreads);
             $(document.body).append(pv0.$el);
