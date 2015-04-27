@@ -1,12 +1,13 @@
 import json
 from .models import Item, Comment
 from django.contrib.auth.models import User
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 
 
 def homepage_view(request):
-    return HttpResponse("Hello")
+    return render(request, 'scav_board/sample_page_backbone.html')
 
 
 def items_on_page(request, page_num):
@@ -49,14 +50,13 @@ def item(request, item_number):
 
 
 def user_login(request):
-    raise Exception()
-    email = request.POST["email"]
+    username = request.POST["username"]
     password = request.POST["password"]
-    user = authenticate(email=email, password=password)
+    user = authenticate(username=username, password=password)
     if user is None:
-        return HttpResponse(json.dumps({'success': False}), content_type='application/json', status=501)
+        return HttpResponse(json.dumps({'success': False}), content_type='application/json', status=403)
     else:
-        #login(request, user)
+        login(request, user)
         return HttpResponse(json.dumps({'success': True}), content_type='application/json')
 
 

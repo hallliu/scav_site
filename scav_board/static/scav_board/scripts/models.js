@@ -85,20 +85,27 @@ var ThreadCollection = Backbone.Collection.extend({
 $(document).ready(function() {
     $('#login-form').submit(function(event) {
         event.preventDefault();
+        var csrftoken = $.cookie('csrftoken');
+
         var options = {
-            method: 'POST',
             data: {
-                'email': $(event.target).find('#loginEmail').value,
-                'password': $(event.target).find('#loginPassword').value
+                'username': $(event.target).find('#loginUsername').val(),
+                'password': $(event.target).find('#loginPassword').val()
             },
+
+            method: 'POST',
+
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+
             success: function() {
-                console.log("login success");
-                console.log(arguments);
+                alert("Login successful");
+                $("#login-modal").modal("hide");
             },
 
             error: function() {
-                console.log("login fail");
-                console.log(arguments);
+                alert("Login failed");
             }
         };
         $.ajax('/scav_board/login/', options)
