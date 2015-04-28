@@ -1,6 +1,6 @@
 "use strict";
 
-var pageView = Backbone.View.extend({
+var PageView = Backbone.View.extend({
     tagname: "ul",
     classname: "list-group",
 
@@ -106,7 +106,7 @@ var CommentThreadView = Backbone.View.extend({
 
     render: function() {
         var headerModel = this.commentThread.attributes.header.attributes;
-        this.headerTitle.html(headerModel.title)
+        this.headerTitle.html(headerModel.title);
         this.itemText.html(headerModel.text);
         return this;
     },
@@ -124,6 +124,44 @@ var CommentThreadView = Backbone.View.extend({
 
 });
 
+var LoginButtonView = Backbone.View.extend({
+    loggedin_template: _.template($("#loggedin-template").html()),
+    loggedout_template: _.template($("#loggedout-template").html()),
+    el: "#login-button",
+
+    initialize: function(user_model) {
+        this.user_model = user_model;
+        this.listenTo(this.user_model, 'change', this.setLogin);
+        this.setLogin();
+    },
+
+    setLogin: function() {
+        if(this.user_model.get('loggedin')) {
+            this.$el.off();
+            this.$el.click(function() {
+                $("#logout-modal").modal("show");
+            });
+        }
+        else {
+            this.$el.off();
+            this.$el.click(function() {
+                $("#login-modal").modal("show");
+            });
+        }
+        this.render();
+    },
+
+    render: function() {
+        if(this.user_model.get('loggedin')) {
+            var displayName = this.user_model.get('first_name') + ' ' + this.user_model.get('last_name');
+            this.$el.html(this.loggedin_template({'displayName': displayName}));
+        }
+        else {
+            this.$el.html(this.loggedout_template());
+        }
+        return this;
+    }
+});
 
 var commentView = Backbone.View.extend({
     template: _.template($("#comment-template").html()),

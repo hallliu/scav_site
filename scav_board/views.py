@@ -57,6 +57,9 @@ def user_login(request):
         return HttpResponse(json.dumps({'success': False}), content_type='application/json', status=403)
     else:
         login(request, user)
-        return HttpResponse(json.dumps({'success': True}), content_type='application/json')
+        return HttpResponse(json.dumps({'success': True,
+                                        'username': username,
+                                        'first_name': user.first_name,
+                                        'last_name': user.last_name}), content_type='application/json')
 
 

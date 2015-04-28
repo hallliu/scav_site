@@ -1,4 +1,5 @@
 "use strict";
+var app = app || {};
 
 var Comment = Backbone.Model.extend({
     defaults: {
@@ -82,7 +83,19 @@ var ThreadCollection = Backbone.Collection.extend({
     }
 });
 
+var UserModel = Backbone.Model.extend({
+    defaults: {
+        'username': 'not',
+        'first_name': 'logged',
+        'last_name': 'in',
+        'loggedin': false
+    }
+});
+
 $(document).ready(function() {
+    app.userM = new UserModel();
+    app.lbv = new LoginButtonView(app.userM);
+
     $('#login-form').submit(function(event) {
         event.preventDefault();
         var csrftoken = $.cookie('csrftoken');
@@ -99,9 +112,15 @@ $(document).ready(function() {
                 'X-CSRFToken': csrftoken
             },
 
-            success: function() {
+            success: function(username_data) {
                 alert("Login successful");
                 $("#login-modal").modal("hide");
+                app.userM.set({
+                    'username': username_data['username'],
+                    'first_name': username_data['first_name'],
+                    'last_name': username_data['last_name'],
+                    'loggedin': true
+                });
             },
 
             error: function() {
@@ -109,5 +128,13 @@ $(document).ready(function() {
             }
         };
         $.ajax('/scav_board/login/', options)
-    })
+    });
+
+    var header = new ThreadHeader({"title": "poop", "text":"poop2"});
+    var cthread = new CommentThread({"header":header, "itemNumber": 14});
+    var allThreads = new ThreadCollection();
+    var pv0 = new PageView(allThreads);
+    $(document.body).append(pv0.$el);
+    allThreads.add(cthread);
+
 });
