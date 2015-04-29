@@ -36,6 +36,7 @@ def save_single_comment(request, item_number):
         'id': new_comment_obj.id,
         'timestamp': new_comment_obj.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
         'author_name': new_comment_obj.author.first_name + " " + new_comment_obj.author.last_name,
+        'text': new_comment_obj.text,
     })
 
     return HttpResponse(returned_data, content_type='application/json')
@@ -102,3 +103,9 @@ def user_login(request):
                                         'last_name': user.last_name}), content_type='application/json')
 
 
+def user_logout(request):
+    username = request.POST["username"]
+    if username != request.user.username:
+        return HttpResponse('You are not the user you are logging out', content_type='text/plain', status=501)
+    logout(request)
+    return HttpResponse(json.dumps({'success': True}), content_type='application/json')

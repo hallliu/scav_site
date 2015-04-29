@@ -132,6 +132,27 @@ $(document).ready(function() {
         $.ajax('/scav_board/login/', options)
     });
 
+    $("#logout-button").click(function(event) {
+        event.preventDefault();
+        var csrftoken = $.cookie('csrftoken');
+        var options = {
+            data: {
+                'username': app.userM.get('username')
+            },
+            method: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            success: function() {
+                alert('Logout successful');
+                $("#logout-model").modal('hide');
+                app.userM.set({'loggedin': false});
+            },
+            error: function() {
+                alert('Logout failed');
+            }
+        };
+        $.ajax('/scav_board/logout/', options)
+    });
+
     app.header = new ThreadHeader({"title": "poop", "text":"poop2"});
     app.cthread = new CommentThread({"header":app.header, "itemNumber": 14});
     app.allThreads = new ThreadCollection();
