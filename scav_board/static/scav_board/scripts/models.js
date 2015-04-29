@@ -4,14 +4,16 @@ var app = app || {};
 var Comment = Backbone.Model.extend({
     defaults: {
         "text": "default comment text",
-        "author": "default author",
+        "username": "default",
+        "author_display_name": "Anonoymous Scavvie",
         "datetime": new Date()
     },
 
     parse: function(response) {
         var result = {};
         result["text"] = response["text"];
-        result["author"] = response["author_name"];
+        result["author_display_name"] = response["author_name"];
+        result["username"] = response["author_username"];
         result["datetime"] = new Date(response["timestamp"]);
         result['id'] = response['id'];
         return result;
@@ -29,7 +31,7 @@ var CommentCollection = Backbone.Collection.extend({
     model: Comment,
 
     initialize: function(models, item_number) {
-        this.url = '/scav_board/api/comments/item/' + item_number;
+        this.url = '/scav_board/api/items/' + item_number + '/comments/';
     },
 
     getLastTwo: function() {
@@ -63,7 +65,7 @@ var CommentThread = Backbone.Model.extend({
         var cc = new CommentCollection([], this.get('itemNumber'));
         cc.fetch();
         this.attributes["comments"] = cc;
-        this.attributes['serverPolling'] = setInterval(_.bind(function() {
+        this.attributes['serverPolling'] = setTimeout(_.bind(function() {
             cc.fetch({delete: false});
         }, this), 5000);
     },
@@ -130,11 +132,11 @@ $(document).ready(function() {
         $.ajax('/scav_board/login/', options)
     });
 
-    var header = new ThreadHeader({"title": "poop", "text":"poop2"});
-    var cthread = new CommentThread({"header":header, "itemNumber": 14});
-    var allThreads = new ThreadCollection();
-    var pv0 = new PageView(allThreads);
-    $(document.body).append(pv0.$el);
-    allThreads.add(cthread);
+    app.header = new ThreadHeader({"title": "poop", "text":"poop2"});
+    app.cthread = new CommentThread({"header":app.header, "itemNumber": 14});
+    app.allThreads = new ThreadCollection();
+    app.pv0 = new PageView(app.allThreads);
+    $(document.body).append(app.pv0.$el);
+    app.allThreads.add(app.cthread);
 
 });

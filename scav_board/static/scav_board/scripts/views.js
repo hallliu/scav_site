@@ -66,6 +66,7 @@ var CommentThreadView = Backbone.View.extend({
         this.headerTitle = this.$el.find('.item-title');
         this.itemText = this.$el.find('.item-text');
         this.comments = this.$('.list-group');
+        this.nologin_notification = this.$('.nologin-notification');
         this.commentThread.initializeComments();
 
         this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
@@ -98,10 +99,17 @@ var CommentThreadView = Backbone.View.extend({
 
     submitComment: function(e) {
         e.preventDefault();
-        var commentText = this.$("textarea").val();
-        var newCommentObj = new Comment({"text": commentText});
-        this.commentThread.get("comments").add(newCommentObj);
-        this.$("textarea").val("");
+        if(app.userM.get('loggedin')) {
+            var commentText = this.$("textarea").val();
+            var newCommentObj = new Comment({"text": commentText, 'username': app.userM.get('username')});
+            this.commentThread.get("comments").add(newCommentObj);
+            var csrftoken = $.cookie('csrftoken');
+            newCommentObj.save({}, {headers: {'X-CSRFToken': csrftoken}});
+            this.$("textarea").val("");
+        }
+        else {
+            this.nologin_notification.show('fast');
+        }
     },
 
     render: function() {
@@ -179,7 +187,7 @@ var commentView = Backbone.View.extend({
         this.$el.html(this.template({
             'text': this.model.get("text"),
             'datestring': datestring,
-            'author': this.model.get("author")
+            'author': this.model.get("author_display_name")
         }));
         return this
     }
