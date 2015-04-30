@@ -8,7 +8,8 @@ import datetime
 
 
 def homepage_view(request):
-    return render(request, 'scav_board/sample_page_backbone.html')
+    pages_available = sorted(Item.objects.values_list('page', flat=True).distinct())
+    return render(request, 'scav_board/sample_page_backbone.html', context={'page_list': pages_available})
 
 
 def items_on_page(request, page_num):

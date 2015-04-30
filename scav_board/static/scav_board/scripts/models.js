@@ -152,9 +152,20 @@ $(document).ready(function() {
         };
         $.ajax('/scav_board/logout/', options)
     });
+    $(".page-selector").each(function(idx, elem) {
+        var target_page = parseInt($(elem).data("target"));
+        $(elem).on('click', function(event) {
+            event.preventDefault();
+            app.currentPageView.remove();
+            app.currentThreadCollection = new ThreadCollection(target_page);
+            app.currentPageView = new PageView(app.currentThreadCollection);
+            $(document.body).append(app.currentPageView.$el);
+            app.currentThreadCollection.fetch();
+        });
+    });
 
-    app.allThreads = new ThreadCollection(1);
-    app.pv0 = new PageView(app.allThreads);
-    $(document.body).append(app.pv0.$el);
-    app.allThreads.fetch();
+    app.currentThreadCollection = new ThreadCollection(1);
+    app.currentPageView = new PageView(app.currentThreadCollection);
+    $(document.body).append(app.currentPageView.$el);
+    app.currentThreadCollection.fetch();
 });

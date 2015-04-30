@@ -21,12 +21,9 @@
                         Pages
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" data-target="#">Page 1</a></li>
-                        <li><a data-target="#">Page 2</a></li>
-                        <li><a data-target="#">Page 3</a></li>
-                        <li><a data-target="#">Page 4</a></li>
-                        <li><a data-target="#">Page 5</a></li>
-
+                        {% for page_num in page_list %}
+                        <li><a href="#" class="page-selector" data-target="{{ page_num }}">Page {{ page_num }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -152,7 +149,9 @@
         </script>
         <script type="text/template" id="commentbutton-template">
             <button type="button" class="btn btn-block btn-primary">
-            <span class="pull-left">Item <%= threadNum %>: <%=description %></span>
+                <span class="col-xs-8 col-md-8 col-lg-8" style="text-overflow: ellipsis;overflow: hidden">
+                    <span class="pull-left">Item <%= threadNum %>: <%=description %></span>
+                </span>
             </button>
         </script>
         <script type="text/template" id="loggedin-template">
