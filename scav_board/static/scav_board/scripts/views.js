@@ -40,6 +40,9 @@ var CommentButtonView = Backbone.View.extend({
     showThread: function() {
         var ntView = new CommentThreadView(this.commentThread);
         ntView.render().$el.modal("toggle");
+        ntView.$el.on('shown.bs.modal', function() {
+            ntView.checkCommentFolding();
+        });
     }
 });
 
@@ -71,8 +74,6 @@ var CommentThreadView = Backbone.View.extend({
         this.commentThread.initializeComments();
         this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
         this.listenTo(this.commentThread.get("header"), 'change', this.render);
-
-        this.checkCommentFolding()
     },
 
     addComment: function(comment) {
