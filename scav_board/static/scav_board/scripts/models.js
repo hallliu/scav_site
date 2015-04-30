@@ -62,11 +62,10 @@ var CommentThread = Backbone.Model.extend({
     // This function goes and actually creates the contents of the comment thread, then starts polling
     // for changes on the database.
     initializeComments: function() {
-        var cc = new CommentCollection([], this.get('itemNumber'));
-        cc.fetch();
-        this.attributes["comments"] = cc;
+        this.set("comments", new CommentCollection([], this.get("itemNumber")));
+        this.get('comments').fetch();
         this.attributes['serverPolling'] = setTimeout(_.bind(function() {
-            cc.fetch({delete: false});
+            this.get('comments').fetch({delete: false});
         }, this), 5000);
     },
 
@@ -87,9 +86,9 @@ var ThreadCollection = Backbone.Collection.extend({
 
 var UserModel = Backbone.Model.extend({
     defaults: {
-        'username': 'not',
-        'first_name': 'logged',
-        'last_name': 'in',
+        'username': 'anonymous',
+        'first_name': 'Anonymous',
+        'last_name': 'Scavvie',
         'loggedin': false
     }
 });

@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 import datetime
 
+
 def homepage_view(request):
     return render(request, 'scav_board/sample_page_backbone.html')
 
@@ -18,19 +19,25 @@ def items_on_page(request, page_num):
 def save_single_comment(request, item_number):
     incoming_comment_data = json.loads(request.body.decode('utf-8'))
     try:
-        comment_author = User.objects.get(username=incoming_comment_data.get('username'))
         comment_item = Item.objects.get(number=item_number)
-    except (User.DoesNotExist, Item.DoesNotExist):
+    except Item.DoesNotExist:
         return HttpResponse("No such user or item exists!", content_type='text/plain', status=404)
 
-    if comment_author.id != request.user.id:
+    try:
+        comment_author = User.objects.get(username=incoming_comment_data.get('username'))
+    except User.DoesNotExist:
+        comment_author = User.objects.get(username='anonymous')
+
+    if comment_author.username != 'anonymous' and comment_author.id != request.user.id:
         return HttpResponse("The specified user is the incorrect user.", content_type='text/plain', status=403)
+
     new_comment = {
         'text': incoming_comment_data['text'],
         'author_id': comment_author.id,
         'timestamp': datetime.datetime.utcnow(),
         'item_id': comment_item.id,
     }
+
     new_comment_obj = Comment.objects.create(**new_comment)
     returned_data = json.dumps({
         'id': new_comment_obj.id,

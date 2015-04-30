@@ -67,18 +67,23 @@ var CommentThreadView = Backbone.View.extend({
         this.itemText = this.$el.find('.item-text');
         this.comments = this.$('.list-group');
         this.nologin_notification = this.$('.nologin-notification');
-        this.commentThread.initializeComments();
 
+        this.commentThread.initializeComments();
         this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
         this.listenTo(this.commentThread.get("header"), 'change', this.render);
+
+        this.checkCommentFolding()
     },
 
     addComment: function(comment) {
         var newCommentView = new commentView({model: comment});
         newCommentView.listenTo(this, "close_thread", newCommentView.remove);
-        var commentLength = this.commentThread.attributes.comments.length; 
         this.comments.append(newCommentView.render().$el);
+        this.checkCommentFolding();
+    },
 
+    checkCommentFolding: function() {
+        var commentLength = this.commentThread.attributes.comments.length;
         if (commentLength > 3 && !this.commentsShown) {
             this.comments.children('li').slice(0, -3).each(function() {$(this).slideUp();});
             this.$(".show-more").html(this.showmore_template({show: this.commentsShown, numAffected: commentLength - 3}));
@@ -99,7 +104,7 @@ var CommentThreadView = Backbone.View.extend({
 
     submitComment: function(e) {
         e.preventDefault();
-        if(app.userM.get('loggedin')) {
+        if(app.userM.get('loggedin') || this.alreadyReminded) {
             var commentText = this.$("textarea").val();
             var newCommentObj = new Comment({"text": commentText, 'username': app.userM.get('username')});
             this.commentThread.get("comments").add(newCommentObj);
@@ -109,6 +114,7 @@ var CommentThreadView = Backbone.View.extend({
         }
         else {
             this.nologin_notification.show('fast');
+            this.alreadyReminded = true;
         }
     },
 

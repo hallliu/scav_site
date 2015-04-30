@@ -10,7 +10,7 @@ class Item(models.Model):
 
 class Comment(models.Model):
     text = models.TextField()
-    author = models.ForeignKey(User, blank=True)
+    author = models.ForeignKey(User)
     timestamp = models.DateTimeField()
     item = models.ForeignKey(Item, db_index=True)
 
