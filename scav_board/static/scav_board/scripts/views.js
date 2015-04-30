@@ -32,7 +32,7 @@ var CommentButtonView = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template({
             "threadNum": this.commentThread.get("itemNumber"),
-            "numNew": this.commentThread.get("numNew")
+            "description": this.commentThread.get("header").get("text")
         }));
         return this;
     },

@@ -12,8 +12,14 @@ def homepage_view(request):
 
 
 def items_on_page(request, page_num):
-    item_ids_on_page = Item.objects.filter(page=page_num).values_list('id', flat=True)
-    return HttpResponse(json.dumps(list(item_ids_on_page)), content_type='application/json')
+    item_objs_on_page = Item.objects.filter(page=page_num)
+    response = json.dumps([{
+        'title': str(item_obj.number) + ': ' + item_obj.description[:30],
+        'description': item_obj.description,
+        'item_number': item_obj.number,
+    } for item_obj in item_objs_on_page])
+
+    return HttpResponse(response, content_type='application/json')
 
 
 def save_single_comment(request, item_number):

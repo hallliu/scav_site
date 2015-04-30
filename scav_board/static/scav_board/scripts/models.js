@@ -48,14 +48,12 @@ var CommentThread = Backbone.Model.extend({
     defaults: {
         "header": new ThreadHeader(),
         "itemNumber": -1,
-        "numNew": 2
     },
     
     parse: function(response) {
         var result = {};
         result["header"] = new ThreadHeader({title: response["title"], text: response["description"]});
         result["itemNumber"] = response["item_number"];
-        result["numNew"] = -1; // TODO: Change this to reflect server side stuff once users get set up
         return result;
     },
 
@@ -80,7 +78,10 @@ var CommentThread = Backbone.Model.extend({
 var ThreadCollection = Backbone.Collection.extend({
     model: CommentThread,
     initialize: function(pageNum) {
-        this.url = '/scav_board/api/page/' + pageNum;
+        this.url = '/scav_board/api/page/' + pageNum + '/items/';
+    },
+    comparator: function(thread) {
+        return thread.get('itemNumber');
     }
 });
 
@@ -152,11 +153,8 @@ $(document).ready(function() {
         $.ajax('/scav_board/logout/', options)
     });
 
-    app.header = new ThreadHeader({"title": "poop", "text":"poop2"});
-    app.cthread = new CommentThread({"header":app.header, "itemNumber": 14});
-    app.allThreads = new ThreadCollection();
+    app.allThreads = new ThreadCollection(1);
     app.pv0 = new PageView(app.allThreads);
     $(document.body).append(app.pv0.$el);
-    app.allThreads.add(app.cthread);
-
+    app.allThreads.fetch();
 });
