@@ -4,9 +4,10 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 import datetime
 
-
+@ensure_csrf_cookie
 def homepage_view(request):
     pages_available = sorted(Item.objects.values_list('page', flat=True).distinct())
     return render(request, 'scav_board/sample_page_backbone.html', context={'page_list': pages_available})
