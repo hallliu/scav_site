@@ -6,8 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <title>Maclean Scav's discussion board</title>
     </head>
 
     <body>
@@ -56,6 +56,7 @@
                         <h5 class="modal-title">Login</h5>
                     </div>
                     <div class="modal-body">
+                        <p>Haven't been here before? Register <a href="/scav_board/registration/">here</a>!</p>
                         <form class="form-horizontal" id="login-form">
                             <div class="form-group">
                                 <label for="loginUsername" class="col-sm-2 control-label">Username</label>
@@ -137,17 +138,18 @@
                 </div>
             </div>
         </script>
+
         <script type="text/template" id="showmore-template">
 <button class="btn btn-block show-more-button" data-target="#"><% if (show) { %>Hide<% } else { %>Show<% } %> <%= numAffected %> comments</button>
         </script>
         <script type="text/template" id="comment-template">
-<h6>Origin: <%= author %></h6>
-<h6>Date: <%= datestring %></h6>
-<p><%= text %></p>
+            <h6>Origin: <%= author %></h6>
+            <h6>Date: <%= datestring %></h6>
+            <p><%= text %></p>
         </script>
         <script type="text/template" id="commentbutton-template">
             <button type="button" class="btn btn-block btn-primary">
-                <span class="col-xs-8 col-md-8 col-lg-8" style="text-overflow: ellipsis;overflow: hidden">
+                <span class="col-xs-10 col-md-8 col-lg-8" style="text-overflow: ellipsis;overflow: hidden">
                     <span class="pull-left">Item <%= threadNum %>: <%=description %></span>
                 </span>
             </button>
@@ -161,7 +163,7 @@
         <script type="text/template" id="page-info-template">
             <h1>Page <%= pageNum %> </h1>
         </script>
-        {%  load staticfiles %}
+        {% load staticfiles %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
         <script src="{% static "scav_board/scripts/underscore.js" %}"></script>

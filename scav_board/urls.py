@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'api/page/(?P<page_num>[0-9]+)/items/', items_on_page),
     url(r'login/', user_login),
     url(r'logout/', user_logout),
+    url(r'registration/', registration_view),
     url(r'^$', homepage_view)
 ]

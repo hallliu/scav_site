@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <title>Register for Maclean Scav</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static "scav_board/styles/registration.css" %}">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+<body>
+    <form id="registration-form" method="post">
+        {% csrf_token %}
+        <h2 class="registration-header">Register here</h2>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <input type="text" name="first_name" class="form-control" placeholder="First Name" required autofocus>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <input type="text" name="last_name" class="form-control" placeholder="Last Name" required autofocus>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+            <input type="email" name="email" class="form-control" placeholder="Email" required autofocus>
+            <input type="password" name="password" class="form-control" placeholder="Password" required autofocus>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <div class="g-recaptcha" data-sitekey="6Lc7LwYTAAAAAO84i07hwYySzBZ2aR6GR9iDVGqj"></div>
+        {% if validation_failed %}
+        <p>You failed the bot test! Talk to Hall for help.</p>
+        {% endif %}
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</body>
+</html>

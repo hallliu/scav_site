@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from .models import Item, Comment
 from django.contrib.auth.models import User
 from django.shortcuts import render
@@ -6,11 +7,45 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 import datetime
+import requests
+from ipware.ip import get_real_ip, get_ip
+
 
 @ensure_csrf_cookie
 def homepage_view(request):
     pages_available = sorted(Item.objects.values_list('page', flat=True).distinct())
     return render(request, 'scav_board/sample_page_backbone.html', context={'page_list': pages_available})
+
+
+@ensure_csrf_cookie
+def registration_view(request):
+    if request.method == 'GET':
+        return render(request, 'scav_board/registration_page.html')
+
+    user_ip = get_real_ip(request)
+    if user_ip is None:
+        user_ip = get_ip(request)
+    print(user_ip)
+
+    validation = requests.post(settings.RECAPTCHA_URL, data={
+        'secret': settings.RECAPTCHA_SECRET_KEY,
+        'response': request.POST['g-recaptcha-response'],
+        'remoteip': user_ip,
+    })
+    validation_success = validation.json()['success']
+    if not validation_success:
+        return render(request, 'scav_board/registration_page.html', context={'validation_failed': True})
+
+    new_user = User.objects.create_user(username=request.POST['username'],
+                                        first_name=request.POST['first_name'],
+                                        last_name=request.POST['last_name'],
+                                        email=request.POST.get('email', 'unknown@unknown.com'))
+    new_user.set_password(request.POST['password'])
+    new_user.save()
+
+    new_user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    login(request, new_user)
+    return homepage_view(request)
 
 
 def items_on_page(request, page_num):
