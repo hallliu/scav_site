@@ -143,7 +143,7 @@ $(document).ready(function() {
             headers: {'X-CSRFToken': csrftoken},
             success: function() {
                 alert('Logout successful');
-                $("#logout-model").modal('hide');
+                $("#logout-modal").modal('hide');
                 app.userM.set({'loggedin': false});
             },
             error: function() {
