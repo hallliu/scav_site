@@ -49,32 +49,11 @@ def save_single_comment(request, item_number):
     new_comment_obj = Comment.objects.create(**new_comment)
     returned_data = json.dumps({
         'id': new_comment_obj.id,
-        'timestamp': new_comment_obj.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
+        'timestamp': new_comment_obj.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'),
         'author_name': new_comment_obj.author.first_name + " " + new_comment_obj.author.last_name,
         'text': new_comment_obj.text,
     })
 
-    return HttpResponse(returned_data, content_type='application/json')
-
-
-def single_comment(request, item_number, comment_id):
-    def comment404():
-        return HttpResponse("This item does not have a comment with that ID!", content_type='text/plain', status=404)
-    try:
-        requested_comment = Comment.objects.get(id=comment_id)
-    except Comment.DoesNotExist:
-        return comment404()
-
-    if requested_comment.item.number != item_number:
-        return comment404()
-
-    returned_data = json.dumps({
-        'id': comment_id,
-        'author_id': requested_comment.author_id,
-        'item_id': requested_comment.item_id,
-        'text': requested_comment.text,
-        'timestamp': requested_comment.timestamp.strftime('%Y-%m-%dT%H:%M:%S')
-    })
     return HttpResponse(returned_data, content_type='application/json')
 
 

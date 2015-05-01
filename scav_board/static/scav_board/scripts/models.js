@@ -59,20 +59,18 @@ var CommentThread = Backbone.Model.extend({
 
     // This function goes and actually creates the contents of the comment thread, then starts polling
     // for changes on the database.
-    initializeComments: function() {
+    initializeComments: function(success_callback) {
         this.set("comments", new CommentCollection([], this.get("itemNumber")));
-        this.get('comments').fetch();
-        this.attributes['serverPolling'] = setTimeout(_.bind(function() {
+        this.get('comments').fetch({success: success_callback});
+        this.attributes['serverPolling'] = setInterval(_.bind(function() {
             this.get('comments').fetch({delete: false});
-        }, this), 5000);
+        }, this), 10000);
     },
 
     teardownComments: function() {
         clearTimeout(this.attributes['serverPolling']);
         this.attributes['comments'] = null;
     }
-
-
 });
 
 var ThreadCollection = Backbone.Collection.extend({
@@ -158,6 +156,7 @@ $(document).ready(function() {
             event.preventDefault();
             app.currentPageView.remove();
             app.currentThreadCollection = new ThreadCollection(target_page);
+            app.pageInfoView.render(target_page);
             app.currentPageView = new PageView(app.currentThreadCollection);
             $(document.body).append(app.currentPageView.$el);
             app.currentThreadCollection.fetch();
@@ -166,6 +165,8 @@ $(document).ready(function() {
 
     app.currentThreadCollection = new ThreadCollection(1);
     app.currentPageView = new PageView(app.currentThreadCollection);
+    app.pageInfoView = new PageInfoView();
+    app.pageInfoView.render(1);
     $(document.body).append(app.currentPageView.$el);
     app.currentThreadCollection.fetch();
 });

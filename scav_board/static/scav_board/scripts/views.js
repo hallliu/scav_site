@@ -40,9 +40,6 @@ var CommentButtonView = Backbone.View.extend({
     showThread: function() {
         var ntView = new CommentThreadView(this.commentThread);
         ntView.render().$el.modal("toggle");
-        ntView.$el.on('shown.bs.modal', function() {
-            ntView.checkCommentFolding();
-        });
     }
 });
 
@@ -71,9 +68,29 @@ var CommentThreadView = Backbone.View.extend({
         this.comments = this.$('.list-group');
         this.nologin_notification = this.$('.nologin-notification');
 
-        this.commentThread.initializeComments();
-        this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
-        this.listenTo(this.commentThread.get("header"), 'change', this.render);
+        this.commentThread.initializeComments(_.bind(function() {
+            this.initialCommentLoad();
+            this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
+            this.listenTo(this.commentThread.get("header"), 'change', this.render);
+        }, this));
+    },
+
+    initialCommentLoad: function() {
+        var commentCollection = this.commentThread.get("comments");
+        var num_comments = commentCollection.length;
+        commentCollection.forEach(_.bind(function(comment_elem, idx) {
+            var newCommentView = new commentView({model: comment_elem});
+            newCommentView.listenTo(this, "close_thread", newCommentView.remove);
+            var newCommentElem = newCommentView.render().$el;
+            if (idx < num_comments - 3) {
+                newCommentElem.css('display', 'none');
+            }
+            this.comments.append(newCommentElem);
+        }, this));
+        if (num_comments > 3) {
+            this.$(".show-more").html(this.showmore_template({show: this.commentsShown, numAffected: num_comments - 3}));
+            this.$(".show-more").show();
+        }
     },
 
     addComment: function(comment) {
@@ -86,7 +103,9 @@ var CommentThreadView = Backbone.View.extend({
     checkCommentFolding: function() {
         var commentLength = this.commentThread.attributes.comments.length;
         if (commentLength > 3 && !this.commentsShown) {
-            this.comments.children('li').slice(0, -3).each(function() {$(this).slideUp();});
+            this.comments.children('li').slice(0, -3).each(function () {
+                $(this).slideUp();
+            });
             this.$(".show-more").html(this.showmore_template({show: this.commentsShown, numAffected: commentLength - 3}));
             this.$(".show-more").show();
         }
@@ -107,6 +126,9 @@ var CommentThreadView = Backbone.View.extend({
         e.preventDefault();
         if(app.userM.get('loggedin') || this.alreadyReminded) {
             var commentText = this.$("textarea").val();
+            if (commentText.length == 0) {
+                return;
+            }
             var newCommentObj = new Comment({"text": commentText, 'username': app.userM.get('username')});
             this.commentThread.get("comments").add(newCommentObj);
             var csrftoken = $.cookie('csrftoken');
@@ -174,6 +196,15 @@ var LoginButtonView = Backbone.View.extend({
         else {
             this.$el.html(this.loggedout_template());
         }
+        return this;
+    }
+});
+
+var PageInfoView = Backbone.View.extend({
+    el: "#page-info-elem",
+    template: _.template($("#page-info-template").html()),
+    render: function(pageNum) {
+        this.$el.html(this.template({pageNum: pageNum}));
         return this;
     }
 });
