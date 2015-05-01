@@ -138,3 +138,21 @@ def user_logout(request):
         return HttpResponse('You are not the user you are logging out', content_type='text/plain', status=501)
     logout(request)
     return HttpResponse(json.dumps({'success': True}), content_type='application/json')
+
+
+def user_info_view(request):
+    if request.user is None:
+        response_dict = {
+            'username': 'anonymous',
+            'first_name': 'Anonymous',
+            'last_name': 'Scavvie',
+            'loggedin': False,
+        }
+    else:
+        response_dict = {
+            'username': request.user.username,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'loggedin': True,
+        }
+    return HttpResponse(json.dumps(response_dict), content_type='application/json')

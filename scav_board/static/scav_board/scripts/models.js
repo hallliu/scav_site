@@ -89,12 +89,14 @@ var UserModel = Backbone.Model.extend({
         'first_name': 'Anonymous',
         'last_name': 'Scavvie',
         'loggedin': false
-    }
+    },
+    url: '/scav_board/api/user_info/'
 });
 
 $(document).ready(function() {
     app.userM = new UserModel();
     app.lbv = new LoginButtonView(app.userM);
+    app.userM.fetch();
 
     $('#login-form').submit(function(event) {
         event.preventDefault();
