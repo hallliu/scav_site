@@ -2,7 +2,7 @@ import json
 from django.conf import settings
 from .models import Item, Comment
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -45,7 +45,7 @@ def registration_view(request):
 
     new_user = authenticate(username=request.POST['username'], password=request.POST['password'])
     login(request, new_user)
-    return homepage_view(request)
+    return redirect('/scav_board/')
 
 
 def items_on_page(request, page_num):
