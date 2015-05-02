@@ -14,13 +14,13 @@ var submit_function = function(fields) {
         success: function(data) {
             var num = data["item_number"];
             $("#submit-status").html("Item " + num + " has been successfully submitted.");
+            clear_fields(fields);
         },
         error: function(xhr) {
             $("#submit-status").html(xhr.responseText);
         }
     };
     $.ajax("/scav_board/add_item/", options);
-    clear_fields(fields);
 };
 
 var clear_fields = function(fields) {
