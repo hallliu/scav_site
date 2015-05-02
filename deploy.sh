@@ -4,6 +4,6 @@
 
 git pull
 pip install -r requirements.txt
-yes | python manage.py collectstatic
+echo yes | python manage.py collectstatic
 python manage.py migrate
 touch scav_site/wsgi.py
