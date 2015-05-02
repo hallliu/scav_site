@@ -1,0 +1,25 @@
+#registration-form {
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.custom-form-header {
+    text-align: center;
+}
+
+.g-recaptcha {
+    margin: 20px auto;
+}
+
+#item-form {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.label {
+    margin-left: 5px;
+}
+
+body {
+    background-color: #FFF5EE;
+}

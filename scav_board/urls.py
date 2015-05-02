@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'logout/', user_logout),
     url(r'api/user_info/', user_info_view),
     url(r'registration/', registration_view),
+    url(r'add_item/', add_item_view),
     url(r'^$', homepage_view)
 ]

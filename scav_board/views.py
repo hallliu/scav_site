@@ -48,6 +48,30 @@ def registration_view(request):
     return redirect('/scav_board/')
 
 
+@ensure_csrf_cookie
+def add_item_view(request):
+    if request.method == 'GET':
+        return render(request, 'scav_board/add_item_page.html')
+
+    if request.user.id is None:
+        return HttpResponse("You are not logged in! Log in to create items.", content_type="text/plain",
+                            status=403)
+
+    item_dict = {
+        'number': int(request.POST['item-number']),
+        'page': int(request.POST['item-page']),
+        'description': request.POST['item-description'],
+    }
+    if len(request.POST.get('exp-day', '')):
+        expiry = datetime.datetime(2015, 5, int(request.POST.get('exp-day')),
+                                   int(request.POST.get('exp-hour', '0')), int(request.POST.get('exp-min', '0')))
+        expiry += datetime.timedelta(hours=5)
+        item_dict['expires'] = expiry
+
+    new_item = Item.objects.create(**item_dict)
+    return HttpResponse(json.dumps({'item_number': new_item.number}), content_type='application/json')
+
+
 def items_on_page(request, page_num):
     item_objs_on_page = Item.objects.filter(page=page_num)
     response = json.dumps([{

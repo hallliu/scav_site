@@ -9,13 +9,13 @@
     {% load staticfiles %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="{% static "scav_board/styles/registration.css" %}">
+    <link rel="stylesheet" href="{% static "scav_board/styles/unified-forms.css" %}">
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
     <form id="registration-form" method="post">
         {% csrf_token %}
-        <h2 class="registration-header">Register here</h2>
+        <h2 class="custom-form-header">Register here</h2>
         <div class="form-group row">
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <input type="text" name="first_name" class="form-control" placeholder="First Name" required autofocus>

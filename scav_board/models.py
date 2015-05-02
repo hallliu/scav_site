@@ -6,6 +6,7 @@ class Item(models.Model):
     number = models.IntegerField(db_index=True, unique=True)
     page = models.IntegerField(db_index=True)
     description = models.TextField()
+    expires = models.DateTimeField(blank=True, default=None, null=True)
 
 
 class Comment(models.Model):
