@@ -63,9 +63,10 @@ def add_item_view(request):
         'description': request.POST['item-description'],
     }
     if len(request.POST.get('exp-day', '')):
-        expiry = datetime.datetime(2015, 5, int(request.POST.get('exp-day')),
-                                   int(request.POST.get('exp-hour', '0')), int(request.POST.get('exp-min', '0')))
-        expiry += datetime.timedelta(hours=5)
+        day = request.POST['exp-day']
+        hour = request.POST['exp-hour'] if len(request.POST['exp-hour']) else '0'
+        minute = request.POST['exp-min'] if len(request.POST['exp-min']) else '0'
+        expiry = datetime.datetime(2015, 5, int(day), int(hour) + 5, int(minute))
         item_dict['expires'] = expiry
 
     new_item = Item.objects.create(**item_dict)
