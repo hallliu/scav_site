@@ -79,6 +79,8 @@ def items_on_page(request, page_num):
         'title': str(item_obj.number) + ': ' + item_obj.description[:30],
         'description': item_obj.description,
         'item_number': item_obj.number,
+        'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
+        'claimedBy': item_obj.claimed.username if item_obj.claimed is not None else None,
     } for item_obj in item_objs_on_page])
 
     return HttpResponse(response, content_type='application/json')
@@ -130,6 +132,38 @@ def comments_on_item(request, item_number):
             'timestamp': comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ')
         } for comment in relevant_comments])
         return HttpResponse(returned_data, content_type='application/json')
+
+
+def claim_item_view(request, item_number):
+    try:
+        item_in_question = Item.objects.get(number=item_number)
+    except KeyError:
+        return HttpResponse("asdadfafa", content_type="text/plain", status=500)
+    except Item.DoesNotExist:
+        return HttpResponse("Invalid item number: {}".format(request.POST["item-number"]), status=500,
+                            content_type="text/plain")
+
+    if item_in_question.claimed is None:
+        if request.user.id is None:
+            item_in_question.claimed = User.objects.get(username="anonymous")
+            item_in_question.save()
+            return HttpResponse(json.dumps({"claimedBy": "anonymous"}), content_type="application/json")
+        else:
+            item_in_question.claimed = request.user
+            item_in_question.save()
+            return HttpResponse(json.dumps({"claimedBy": request.user.username}), content_type="application/json")
+    else:
+        if item_in_question.claimed.username == "anonymous":
+            item_in_question.claimed = None
+            item_in_question.save()
+            return HttpResponse(json.dumps({"claimedBy": None}), content_type="application/json")
+        else:
+            if request.user.id != item_in_question.claimed.id:
+                return HttpResponse("You can't unclaim this from another user!", content_type="text/plain", status=403)
+            else:
+                item_in_question.claimed = None
+                item_in_question.save()
+                return HttpResponse(json.dumps({"claimedBy": None}), content_type="application/json")
 
 
 def item(request, item_number):

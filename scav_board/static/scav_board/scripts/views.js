@@ -176,6 +176,23 @@ var ItemDescriptionView = Backbone.View.extend({
             expires: (this.thread_header.get("expiration") === null) ? null : this.thread_header.get("expiration").toLocaleString()
         };
         this.$el.html(this.template(template_options));
+        this.$(".claim-item-toggle").click(_.bind(function() {
+            var options = {
+                method: "POST",
+                headers: {'X-CSRFToken': $.cookie("csrftoken")},
+                success: _.bind(function(resp) {
+                    if (resp["claimedBy"] !== null)
+                        this.thread_header.set("claimedBy", resp["claimedBy"]);
+                    else
+                        this.thread_header.set("claimedBy", null);
+                }, this),
+                error: function(resp) {
+                    alert(resp.responseText);
+                }
+            };
+            $.ajax("/scav_board/api/claim_item/" + this.thread_header.get("itemNumber"), options);
+        }, this));
+        return this;
     }
 });
 

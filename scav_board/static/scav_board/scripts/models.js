@@ -25,7 +25,8 @@ var ThreadHeader = Backbone.Model.extend({
         "title": "Placeholder title",
         "text": "Placeholder text",
         "expiration": null,
-        "claimedBy": null
+        "claimedBy": null,
+        "itemNumber": -1
     }
 });
 
@@ -58,7 +59,8 @@ var CommentThread = Backbone.Model.extend({
             title: response["title"],
             text: response["description"],
             expiration: response["expiration"] ? new Date(response["expiration"]) : null,
-            claimedBy: response["claimedBy"]
+            claimedBy: response["claimedBy"],
+            itemNumber: response["item_number"]
         });
 
         result["itemNumber"] = response["item_number"];
