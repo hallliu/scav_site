@@ -7,6 +7,8 @@ class Item(models.Model):
     page = models.IntegerField(db_index=True)
     description = models.TextField()
     expires = models.DateTimeField(blank=True, default=None, null=True)
+    claimed = models.ForeignKey(User, default=None, null=True, blank=True)
+    done = models.BooleanField(default=False)
 
 
 class Comment(models.Model):

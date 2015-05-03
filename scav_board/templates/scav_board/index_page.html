@@ -112,9 +112,7 @@
                         <h4 class="modal-title item-title"></h4>
                     </div>
                     <div class="modal-body" style="min-height:300px">
-                        <div class="panel panel-default">
-                            <div class="panel-body item-text"></div>
-                        </div>
+                        <div class="panel panel-default item-text"></div>
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <div class="panel-title">Comments</div>
@@ -137,6 +135,12 @@
                     </div>
                 </div>
             </div>
+        </script>
+
+        <script type="text/template" id="item-description-template">
+            <p><%= item_description %></p>
+            <p><% if (claimedBy !== null) { %> Claimed by <%= claimedBy %> <% } else { %> <button class="btn btn-default">Claim item</button> <% } %></p>
+            <% if (expires !== null) { %><p>Expires on <%= expires %></p><% } %>
         </script>
 
         <script type="text/template" id="showmore-template">

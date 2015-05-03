@@ -60,18 +60,17 @@ var CommentThreadView = Backbone.View.extend({
         this.commentThread = commentThread;
         this.$el.html(this.baseHtml);
         this.$el.on("hide.bs.modal", _.bind(this.close, this));
-
         this.$(".show-more").hide();
 
-        this.headerTitle = this.$el.find('.item-title');
-        this.itemText = this.$el.find('.item-text');
+        this.headerView = new ItemDescriptionView(commentThread.get("header"));
+        this.$(".item-text").append(this.headerView.$el);
+
         this.comments = this.$('.list-group');
         this.nologin_notification = this.$('.nologin-notification');
 
         this.commentThread.initializeComments(_.bind(function() {
             this.initialCommentLoad();
             this.listenTo(this.commentThread.get("comments"), 'add', this.addComment);
-            this.listenTo(this.commentThread.get("header"), 'change', this.render);
         }, this));
     },
 
@@ -142,9 +141,7 @@ var CommentThreadView = Backbone.View.extend({
     },
 
     render: function() {
-        var headerModel = this.commentThread.attributes.header.attributes;
-        this.headerTitle.html(headerModel.title);
-        this.itemText.html(headerModel.text);
+        this.$(".item-title").html(this.commentThread.get("header").get("title"));
         return this;
     },
 
@@ -159,6 +156,27 @@ var CommentThreadView = Backbone.View.extend({
         Backbone.View.prototype.remove.apply(this);
     }
 
+});
+
+var ItemDescriptionView = Backbone.View.extend({
+    template: _.template($("#item-description-template").html()),
+    tagName: "div",
+    className: "panel-body",
+
+    initialize: function(thread_header) {
+        this.thread_header = thread_header;
+        this.listenTo(this.thread_header, 'change', this.render);
+        this.render();
+    },
+
+    render: function() {
+        var template_options = {
+            item_description: this.thread_header.get("text"),
+            claimedBy: this.thread_header.get("claimedBy"),
+            expires: (this.thread_header.get("expiration") === null) ? null : this.thread_header.get("expiration").toLocaleString()
+        };
+        this.$el.html(this.template(template_options));
+    }
 });
 
 var LoginButtonView = Backbone.View.extend({

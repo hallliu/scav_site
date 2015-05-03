@@ -23,7 +23,9 @@ var Comment = Backbone.Model.extend({
 var ThreadHeader = Backbone.Model.extend({
     defaults: {
         "title": "Placeholder title",
-        "text": "Placeholder text"
+        "text": "Placeholder text",
+        "expiration": null,
+        "claimedBy": null
     }
 });
 
@@ -47,12 +49,18 @@ var CommentCollection = Backbone.Collection.extend({
 var CommentThread = Backbone.Model.extend({
     defaults: {
         "header": new ThreadHeader(),
-        "itemNumber": -1,
+        "itemNumber": -1
     },
     
     parse: function(response) {
         var result = {};
-        result["header"] = new ThreadHeader({title: response["title"], text: response["description"]});
+        result["header"] = new ThreadHeader({
+            title: response["title"],
+            text: response["description"],
+            expiration: response["expiration"] ? new Date(response["expiration"]) : null,
+            claimedBy: response["claimedBy"]
+        });
+
         result["itemNumber"] = response["item_number"];
         return result;
     },

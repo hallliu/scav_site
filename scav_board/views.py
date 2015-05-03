@@ -14,7 +14,7 @@ from ipware.ip import get_real_ip, get_ip
 @ensure_csrf_cookie
 def homepage_view(request):
     pages_available = sorted(Item.objects.values_list('page', flat=True).distinct())
-    return render(request, 'scav_board/sample_page_backbone.html', context={'page_list': pages_available})
+    return render(request, 'scav_board/index_page.html', context={'page_list': pages_available})
 
 
 @ensure_csrf_cookie
@@ -166,7 +166,7 @@ def user_logout(request):
 
 
 def user_info_view(request):
-    if request.user is None:
+    if request.user.id is None:
         response_dict = {
             'username': 'anonymous',
             'first_name': 'Anonymous',
