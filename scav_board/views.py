@@ -36,6 +36,9 @@ def registration_view(request):
     if not validation_success:
         return render(request, 'scav_board/registration_page.html', context={'validation_failed': True})
 
+    if User.objects.filter(username=request.POST['username']).count() > 0:
+        return HttpResponse("This username already exists! Hit back to try another one.", content_type="text/plain")
+
     new_user = User.objects.create_user(username=request.POST['username'],
                                         first_name=request.POST['first_name'],
                                         last_name=request.POST['last_name'],
