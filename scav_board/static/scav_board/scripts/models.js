@@ -61,8 +61,8 @@ var CommentThread = Backbone.Model.extend({
             title: response["title"],
             text: response["description"],
             expiration: response["expiration"] ? new Date(response["expiration"]) : null,
-            roadtrip: response["roadtrip"],
-            showcase: response["showcase"],
+            roadtrip: response["categories"].indexOf('road-trip') > -1,
+            showcase: response["categories"].indexOf('showcase') > -1,
             claimedBy: response["claimedBy"],
             itemNumber: response["item_number"]
         });

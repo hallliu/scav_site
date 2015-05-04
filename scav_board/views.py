@@ -90,6 +90,7 @@ def add_item_view(request):
     return HttpResponse(json.dumps({'item_number': new_item.number}), content_type='application/json')
 
 
+# noinspection DjangoOrm
 def items_on_page(request, page_num):
     item_objs_on_page = Item.objects.filter(page=page_num)
     response = json.dumps([{
@@ -98,8 +99,7 @@ def items_on_page(request, page_num):
         'description': item_obj.description,
         'item_number': item_obj.number,
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
-        'roadtrip': item_obj.is_roadtrip,
-        'showcase': item_obj.is_showcase,
+        'categories': list(item_obj.categories.values_list('category_name', flat=True)),
         'claimedBy': item_obj.claimed.username if item_obj.claimed is not None else None,
     } for item_obj in item_objs_on_page])
 
