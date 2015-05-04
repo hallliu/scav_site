@@ -1,12 +1,8 @@
-var submit_function = function(fields) {
+var submit_fn = function() {
     $("#submit-status").html("Submitting...");
-    var val_dict = {};
-    for (var key in fields) {
-        if (fields.hasOwnProperty(key))
-            val_dict[key] = fields[key].val();
-    }
+
     var options = {
-        data: val_dict,
+        data: $("#item-form").serialize(),
         method: "POST",
         headers: {
             'X-CSRFToken': $.cookie("csrftoken")
@@ -30,15 +26,3 @@ var clear_fields = function(fields) {
     }
     fields["item-expires"].prop("checked", false);
 };
-
-var wrapper = {};
-
-$(document).ready(function() {
-    var all_fields = {};
-    ["item-page", "item-number", "item-description", "item-expires", "exp-day", "exp-hour", "exp-min"].forEach(function(fname) {
-        all_fields[fname] = $("#" + fname);
-    });
-    wrapper.submit_fn = function() {
-        submit_function(all_fields);
-    };
-});

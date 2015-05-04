@@ -1,6 +1,6 @@
 import json
 from django.conf import settings
-from .models import Item, Comment
+from .models import Item, Comment, ItemCategory
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -53,8 +53,17 @@ def registration_view(request):
 
 @ensure_csrf_cookie
 def add_item_view(request):
+    category_names = [
+        ('road-trip', "Road Trip"),
+        ('showcase', "Showcase"),
+        ('food', "Food"),
+        ('video', "Video"),
+        ('science', "Science (whatever Shelby does)"),
+        ('music', "Music"),
+        ('arts', "Arts"),
+    ]
     if request.method == 'GET':
-        return render(request, 'scav_board/add_item_page.html')
+        return render(request, 'scav_board/add_item_page.html', context={'category_info': category_names})
 
     if request.user.id is None:
         return HttpResponse("You are not logged in! Log in to create items.", content_type="text/plain",
@@ -72,7 +81,12 @@ def add_item_view(request):
         expiry = datetime.datetime(2015, 5, int(day), int(hour) + 5, int(minute))
         item_dict['expires'] = expiry
 
+
     new_item = Item.objects.create(**item_dict)
+    for category_name, _ in category_names:
+        if request.POST.get(category_name, '') == 'on':
+            new_item.categories.add(ItemCategory.objects.get(category_name=category_name))
+
     return HttpResponse(json.dumps({'item_number': new_item.number}), content_type='application/json')
 
 
