@@ -7,11 +7,19 @@ var PageView = Backbone.View.extend({
     initialize: function(threads) {
         this.threads = threads;
         this.listenTo(this.threads, "add", this.addThread);
+        this.pollTimeout = setInterval(_.bind(function() {
+            this.threads.fetch();
+        }, this), 10000);
     },
 
     addThread: function(threadModel) {
         var newThreadButtonView = new CommentButtonView(threadModel);
         this.$el.append(newThreadButtonView.render().$el);
+    },
+
+    remove: function() {
+        clearTimeout(this.pollTimeout);
+        Backbone.View.prototype.remove.apply(this);
     }
 });
 
@@ -30,16 +38,28 @@ var CommentButtonView = Backbone.View.extend({
     },
     
     render: function() {
+        var itemHeader = this.commentThread.get("header");
         this.$el.html(this.template({
             "threadNum": this.commentThread.get("itemNumber"),
-            "description": this.commentThread.get("header").get("text")
+            "description": itemHeader.get("text"),
+            "timed": itemHeader.get("expiration") !== null,
+            "roadtrip": itemHeader.get("roadtrip"),
+            "showcase": itemHeader.get("showcase")
         }));
+        if (itemHeader.get("expiration") !== null) {
+            var minutes_until_expiration = (new Date() - itemHeader.get("expiration")) / -60000;
+            if (minutes_until_expiration < 0)
+                this.$(".glyphicon-time").css("color", "red");
+            else if (minutes_until_expiration < 120)
+                this.$(".glyphicon-time").css("color", "orange");
+        }
         return this;
     },
 
     showThread: function() {
         var ntView = new CommentThreadView(this.commentThread);
         ntView.render().$el.modal("toggle");
+        history.pushState({}, "");
     }
 });
 
@@ -78,7 +98,7 @@ var CommentThreadView = Backbone.View.extend({
         var commentCollection = this.commentThread.get("comments");
         var num_comments = commentCollection.length;
         commentCollection.forEach(_.bind(function(comment_elem, idx) {
-            var newCommentView = new commentView({model: comment_elem});
+            var newCommentView = new CommentView({model: comment_elem});
             newCommentView.listenTo(this, "close_thread", newCommentView.remove);
             var newCommentElem = newCommentView.render().$el;
             if (idx < num_comments - 3) {
@@ -93,7 +113,7 @@ var CommentThreadView = Backbone.View.extend({
     },
 
     addComment: function(comment) {
-        var newCommentView = new commentView({model: comment});
+        var newCommentView = new CommentView({model: comment});
         newCommentView.listenTo(this, "close_thread", newCommentView.remove);
         this.comments.append(newCommentView.render().$el);
         this.checkCommentFolding();
@@ -244,7 +264,7 @@ var PageInfoView = Backbone.View.extend({
     }
 });
 
-var commentView = Backbone.View.extend({
+var CommentView = Backbone.View.extend({
     template: _.template($("#comment-template").html()),
 
     tagName: 'li',

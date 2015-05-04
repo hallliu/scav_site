@@ -25,6 +25,8 @@ var ThreadHeader = Backbone.Model.extend({
         "title": "Placeholder title",
         "text": "Placeholder text",
         "expiration": null,
+        "roadtrip": false,
+        "showcase": false,
         "claimedBy": null,
         "itemNumber": -1
     }
@@ -59,11 +61,14 @@ var CommentThread = Backbone.Model.extend({
             title: response["title"],
             text: response["description"],
             expiration: response["expiration"] ? new Date(response["expiration"]) : null,
+            roadtrip: response["roadtrip"],
+            showcase: response["showcase"],
             claimedBy: response["claimedBy"],
             itemNumber: response["item_number"]
         });
 
         result["itemNumber"] = response["item_number"];
+        result['id'] = response['id'];
         return result;
     },
 
@@ -108,6 +113,10 @@ $(document).ready(function() {
     app.lbv = new LoginButtonView(app.userM);
     app.userM.fetch();
 
+    window.onpopstate = function(event) {
+        event.preventDefault();
+        $(".modal").modal("hide");
+    };
     $('#login-form').submit(function(event) {
         event.preventDefault();
         var csrftoken = $.cookie('csrftoken');

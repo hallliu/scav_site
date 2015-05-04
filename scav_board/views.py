@@ -79,10 +79,13 @@ def add_item_view(request):
 def items_on_page(request, page_num):
     item_objs_on_page = Item.objects.filter(page=page_num)
     response = json.dumps([{
+        'id': item_obj.id,
         'title': str(item_obj.number) + ': ' + item_obj.description[:30],
         'description': item_obj.description,
         'item_number': item_obj.number,
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
+        'roadtrip': item_obj.is_roadtrip,
+        'showcase': item_obj.is_showcase,
         'claimedBy': item_obj.claimed.username if item_obj.claimed is not None else None,
     } for item_obj in item_objs_on_page])
 

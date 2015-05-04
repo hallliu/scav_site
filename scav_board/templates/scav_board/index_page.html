@@ -157,9 +157,14 @@
             <p><%= text %></p>
         </script>
         <script type="text/template" id="commentbutton-template">
-            <button type="button" class="btn btn-block btn-primary">
-                <span class="col-xs-10 col-md-8 col-lg-8" style="text-overflow: ellipsis;overflow: hidden">
-                    <span class="pull-left">Item <%= threadNum %>: <%=description %></span>
+            <button type="button" class="btn btn-block btn-primary container-fluid">
+                <span class="col-xs-10 col-md-10 col-lg-10" style="text-overflow: ellipsis; overflow: hidden; text-align: left">
+                    Item <%= threadNum %>: <%=description %>
+                </span>
+                <span class="col-xs-2 col-md-2 col-lg-2" style="text-align: right;">
+                    <% if (timed) { %> <span class="glyphicon glyphicon-time"></span> <% } %>
+                    <% if (roadtrip) { %> <span class="glyphicon glyphicon-road"></span> <% } %>
+                    <% if (showcase) { %> <span class="glyphicon glyphicon-star"></span> <% } %>
                 </span>
             </button>
         </script>
