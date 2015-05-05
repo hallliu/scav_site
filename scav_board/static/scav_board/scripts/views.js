@@ -78,7 +78,7 @@ var CommentButtonView = Backbone.View.extend({
     showThread: function() {
         var ntView = new CommentThreadView(this.commentThread);
         ntView.render().$el.modal("toggle");
-        history.pushState({}, "");
+        history.pushState({is_modal: true}, "");
     }
 });
 
@@ -278,6 +278,7 @@ var PageInfoView = Backbone.View.extend({
     el: "#page-info-elem",
     template: _.template($("#page-info-template").html()),
     render: function(pageNum) {
+        this.pageNum = pageNum;
         this.$el.html(this.template({pageNum: pageNum}));
         return this;
     }
