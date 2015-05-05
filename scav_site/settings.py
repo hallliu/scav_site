@@ -19,6 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '%_za15i=a8dmopkr^3v$)11#ytk7=h^7kjq990i9i6$uk!sig6'
 RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify'
+RECAPTCHA_SITE_KEY = '6LdeZQYTAAAAAPUnIsnZPbHRNUHVGDpodwMGQQ5O'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

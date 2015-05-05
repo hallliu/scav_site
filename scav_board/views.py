@@ -23,7 +23,7 @@ def homepage_view(request):
 @ensure_csrf_cookie
 def registration_view(request):
     if request.method == 'GET':
-        return render(request, 'scav_board/registration_page.html')
+        return render(request, 'scav_board/registration_page.html', context={'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY})
 
     user_ip = get_real_ip(request)
     if user_ip is None:
