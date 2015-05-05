@@ -118,7 +118,7 @@ var executeSearchQuery = function(qstring, target_page) {
     $("#search-text").val(qstring);
     app.pageInfoView.render(target_page);
     app.currentPageView = new PageView(app.currentThreadCollection);
-    $(document.body).append(app.currentPageView.$el);
+    $("#wrap").append(app.currentPageView.$el);
     app.currentQuery = qstring;
     app.currentTarget = target_page;
 };

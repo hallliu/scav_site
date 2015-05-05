@@ -68,10 +68,6 @@ def add_item_view(request):
     if request.method == 'GET':
         return render(request, 'scav_board/add_item_page.html', context={'category_info': category_names})
 
-    if request.user.id is None:
-        return HttpResponse("You are not logged in! Log in to create items.", content_type="text/plain",
-                            status=403)
-
     item_dict = {
         'number': int(request.POST['item-number']),
         'page': int(request.POST['item-page']),
