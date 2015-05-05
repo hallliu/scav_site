@@ -72,6 +72,7 @@ def add_item_view(request):
         'number': int(request.POST['item-number']),
         'page': int(request.POST['item-page']),
         'description': request.POST['item-description'],
+        'points': request.POST['item-points'],
     }
     if len(request.POST.get('exp-day', '')):
         day = request.POST['exp-day']

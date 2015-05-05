@@ -15,11 +15,14 @@
     <form class="body-form" id="item-form" method="post" action="javascript:submit_fn();">
         <h2 class="custom-form-header">Enter new items here</h2>
         <div class="form-group row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-4 col-sm-4">
                 <input type="number" name="item-number" class="form-control" placeholder="Number" required autofocus>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-4 col-sm-4">
                 <input type="number" name="item-page" class="form-control" placeholder="Page" required autofocus>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <input type="text" name="item-points" class="form-control" placeholder="Points (non-numeric okay)" required autofocus>
             </div>
         </div>
         <textarea rows="5" name="item-description" class="form-control" placeholder="Enter item description here" required autofocus></textarea>

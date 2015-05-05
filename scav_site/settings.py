@@ -66,6 +66,7 @@ DATABASES = {
         'USER': 'scav_server',
         'PASSWORD': 'penis',
         'HOST': 'localhost',
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 
