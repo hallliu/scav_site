@@ -7,6 +7,11 @@
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <style>
+            .pointy {
+                cursor: pointer;
+            }
+        </style>
         <title>Maclean Scav's discussion board</title>
     </head>
 
@@ -22,7 +27,7 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         {% for page_num in page_list %}
-                        <li><a href="#" class="page-selector" data-target="{{ page_num }}">Page {{ page_num }}</a></li>
+                        <li><a class="page-selector pointy" data-target="{{ page_num }}">Page {{ page_num }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -149,7 +154,7 @@
         </script>
 
         <script type="text/template" id="showmore-template">
-<button class="btn btn-block show-more-button" data-target="#"><% if (show) { %>Hide<% } else { %>Show<% } %> <%= numAffected %> comments</button>
+            <button class="btn btn-block show-more-button" data-target="#"><% if (show) { %>Hide<% } else { %>Show<% } %> <%= numAffected %> comments</button>
         </script>
         <script type="text/template" id="comment-template">
             <h6>Origin: <%= author %></h6>
@@ -169,10 +174,10 @@
             </button>
         </script>
         <script type="text/template" id="loggedin-template">
-            <a href="#" style="font-size:10px;line-height:100%"><%= displayName %><br>Click to log out</a>
+            <a class="pointy" style="font-size:10px;line-height:100%"><%= displayName %><br>Click to log out</a>
         </script>
         <script type="text/template" id="loggedout-template">
-            <a href="#">Login Here</a>
+            <a class="pointy">Login Here</a>
         </script>
         <script type="text/template" id="page-info-template">
 
