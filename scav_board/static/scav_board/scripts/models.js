@@ -89,13 +89,43 @@ var CommentThread = Backbone.Model.extend({
 
 var ThreadCollection = Backbone.Collection.extend({
     model: CommentThread,
-    initialize: function(pageNum) {
-        this.url = '/scav_board/api/page/' + pageNum + '/items/';
+    initialize: function(qstring) {
+        this.url = '/scav_board/api/items/?' + qstring;
     },
     comparator: function(thread) {
         return thread.get('itemNumber');
     }
 });
+
+var make_search_query = function(search_string) {
+    var page = null;
+    var keywords = [];
+    var categories = [];
+    var tokens = search_string.split(" ");
+    tokens.forEach(function(token) {
+        if (token.charAt(0) === '#') {
+            var sepk = token.split(":");
+            if (sepk[0] === "#page") {
+                page = sepk[1];
+            } else if (sepk[0] === "#category") {
+                categories.push(sepk[1]);
+            }
+        } else {
+            keywords.push(token);
+        }
+    });
+    var queries = [];
+    if (page !== null) {
+        queries.push("page=" + page);
+    }
+    keywords.forEach(function(kwd) {
+        queries.push("keyword=" + kwd);
+    });
+    categories.forEach(function(cat) {
+        queries.push("category=" + cat);
+    });
+    return queries.join('&');
+};
 
 var UserModel = Backbone.Model.extend({
     defaults: {

@@ -9,6 +9,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import datetime
 import requests
 from ipware.ip import get_real_ip, get_ip
+from django.db.models import Q
+from operator import or_
+from functools import reduce
 
 
 @ensure_csrf_cookie
@@ -91,8 +94,26 @@ def add_item_view(request):
 
 
 # noinspection DjangoOrm
-def items_on_page(request, page_num):
-    item_objs_on_page = Item.objects.filter(page=page_num)
+def filtered_items(request):
+    if request.method != 'GET':
+        return HttpResponse("POSTing to this URL is not supported.", content_type='text/plain', status=503)
+    page = request.GET.get('page')
+    keywords = request.GET.getlist('keyword')
+    categories = request.GET.getlist('category')
+    import ipdb;ipdb.set_trace()
+
+    item_objs_to_return = Item.objects.all()
+    if page is not None:
+        item_objs_to_return = item_objs_to_return.filter(page=int(page))
+    keyword_orqs = []
+    for kwd in keywords:
+        keyword_orqs.append(Q(description__icontains=kwd))
+    item_objs_to_return = item_objs_to_return.filter(reduce(or_, keyword_orqs, Q()))
+    category_orqs = []
+    for cat in categories:
+        keyword_orqs.append(Q(categories__category_name=cat))
+    item_objs_to_return = item_objs_to_return.filter(reduce(or_, category_orqs, Q()))
+
     response = json.dumps([{
         'id': item_obj.id,
         'title': str(item_obj.number) + ': ' + item_obj.description[:30],
@@ -101,7 +122,7 @@ def items_on_page(request, page_num):
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
         'categories': list(item_obj.categories.values_list('category_name', flat=True)),
         'claimedBy': item_obj.claimed.username if item_obj.claimed is not None else None,
-    } for item_obj in item_objs_on_page])
+    } for item_obj in item_objs_to_return])
 
     return HttpResponse(response, content_type='application/json')
 
