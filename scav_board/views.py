@@ -107,11 +107,14 @@ def filtered_items(request):
     keyword_orqs = []
     for kwd in keywords:
         keyword_orqs.append(Q(description__icontains=kwd))
-    item_objs_to_return = item_objs_to_return.filter(reduce(or_, keyword_orqs, Q()))
+    if len(keyword_orqs):
+        item_objs_to_return = item_objs_to_return.filter(reduce(or_, keyword_orqs))
+
     category_orqs = []
     for cat in categories:
-        keyword_orqs.append(Q(categories__category_name=cat))
-    item_objs_to_return = item_objs_to_return.filter(reduce(or_, category_orqs, Q()))
+        category_orqs.append(Q(categories__category_name=cat))
+    if len(category_orqs):
+        item_objs_to_return = item_objs_to_return.filter(reduce(or_, category_orqs))
 
     response = json.dumps([{
         'id': item_obj.id,

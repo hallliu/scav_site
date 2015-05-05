@@ -200,12 +200,24 @@ $(document).ready(function() {
         };
         $.ajax('/scav_board/logout/', options)
     });
+
+    // Search functionality
+    $("#search-button").click(function(event) {
+        event.preventDefault();
+        app.currentPageView.remove();
+        app.currentThreadCollection = new ThreadCollection(make_search_query($("#search-text").val()));
+        app.pageInfoView.render(-1);
+        app.currentPageView = new PageView(app.currentThreadCollection);
+        $(document.body).append(app.currentPageView.$el);
+    });
+
     $(".page-selector").each(function(idx, elem) {
         var target_page = parseInt($(elem).data("target"));
         $(elem).on('click', function(event) {
             event.preventDefault();
             app.currentPageView.remove();
             app.currentThreadCollection = new ThreadCollection(make_search_query("#page:" + target_page));
+            $("#search-text").val("#page:" + target_page);
             app.pageInfoView.render(target_page);
             app.currentPageView = new PageView(app.currentThreadCollection);
             $(document.body).append(app.currentPageView.$el);
@@ -216,5 +228,6 @@ $(document).ready(function() {
     app.currentPageView = new PageView(app.currentThreadCollection);
     app.pageInfoView = new PageInfoView();
     app.pageInfoView.render(1);
+    $("#search-text").val("#page:1");
     $(document.body).append(app.currentPageView.$el);
 });
