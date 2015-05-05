@@ -6,15 +6,32 @@ var PageView = Backbone.View.extend({
 
     initialize: function(threads) {
         this.threads = threads;
-        this.listenTo(this.threads, "add", this.addThread);
-        this.pollTimeout = setInterval(_.bind(function() {
-            this.threads.fetch();
-        }, this), 10000);
+        this.threads.fetch({success: _.bind(function() {
+            this.initialRender();
+            this.listenTo(this.threads, "add", this.addThread);
+            this.pollTimeout = setInterval(_.bind(function() {
+                this.threads.fetch();
+            }, this), 10000);
+
+        }, this)});
     },
 
-    addThread: function(threadModel) {
+    addThread: function(threadModel, collection) {
+        var index = collection.indexOf(threadModel);
         var newThreadButtonView = new CommentButtonView(threadModel);
-        this.$el.append(newThreadButtonView.render().$el);
+        if (index === 0)
+            this.$el.prepend(newThreadButtonView.render().$el);
+        else {
+            var properElem = this.$().eq(index - 1);
+            newThreadButtonView.render().$el.insertAfter(properElem);
+        }
+    },
+
+    initialRender: function() {
+        this.threads.each(_.bind(function(threadModel) {
+            var newThreadButtonView = new CommentButtonView(threadModel);
+            this.$el.append(newThreadButtonView.render().$el);
+        }, this));
     },
 
     remove: function() {
@@ -52,6 +69,8 @@ var CommentButtonView = Backbone.View.extend({
                 this.$(".glyphicon-time").css("color", "red");
             else if (minutes_until_expiration < 120)
                 this.$(".glyphicon-time").css("color", "orange");
+            else if (minutes_until_expiration < 240)
+                this.$(".glyphicon-time").css("color", "yellow");
         }
         return this;
     },

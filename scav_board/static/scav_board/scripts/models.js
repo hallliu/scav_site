@@ -46,7 +46,6 @@ var CommentCollection = Backbone.Collection.extend({
     comparator: function(comment) {
         return comment.get('datetime');
     }
-
 });
 
 var CommentThread = Backbone.Model.extend({
@@ -180,7 +179,6 @@ $(document).ready(function() {
             app.pageInfoView.render(target_page);
             app.currentPageView = new PageView(app.currentThreadCollection);
             $(document.body).append(app.currentPageView.$el);
-            app.currentThreadCollection.fetch();
         });
     });
 
@@ -189,5 +187,4 @@ $(document).ready(function() {
     app.pageInfoView = new PageInfoView();
     app.pageInfoView.render(1);
     $(document.body).append(app.currentPageView.$el);
-    app.currentThreadCollection.fetch();
 });
