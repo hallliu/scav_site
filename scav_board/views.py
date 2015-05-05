@@ -100,7 +100,6 @@ def filtered_items(request):
     page = request.GET.get('page')
     keywords = request.GET.getlist('keyword')
     categories = request.GET.getlist('category')
-    import ipdb;ipdb.set_trace()
 
     item_objs_to_return = Item.objects.all()
     if page is not None:

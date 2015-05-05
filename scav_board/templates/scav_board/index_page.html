@@ -175,7 +175,8 @@
             <a href="#">Login Here</a>
         </script>
         <script type="text/template" id="page-info-template">
-            <h1>Page <%= pageNum %> </h1>
+
+            <h1><% if (pageNum > 0) { %> Page <%= pageNum %> <% } else { %> Search Results <% } %></h1>
         </script>
         {% load staticfiles %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

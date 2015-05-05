@@ -205,14 +205,14 @@ $(document).ready(function() {
         $(elem).on('click', function(event) {
             event.preventDefault();
             app.currentPageView.remove();
-            app.currentThreadCollection = new ThreadCollection(target_page);
+            app.currentThreadCollection = new ThreadCollection(make_search_query("#page:" + target_page));
             app.pageInfoView.render(target_page);
             app.currentPageView = new PageView(app.currentThreadCollection);
             $(document.body).append(app.currentPageView.$el);
         });
     });
 
-    app.currentThreadCollection = new ThreadCollection(1);
+    app.currentThreadCollection = new ThreadCollection(make_search_query("#page:1"));
     app.currentPageView = new PageView(app.currentThreadCollection);
     app.pageInfoView = new PageInfoView();
     app.pageInfoView.render(1);
