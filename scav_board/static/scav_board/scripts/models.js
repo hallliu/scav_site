@@ -27,6 +27,7 @@ var ThreadHeader = Backbone.Model.extend({
         "expiration": null,
         "roadtrip": false,
         "showcase": false,
+        "page": -1,
         "claimedBy": null,
         "itemNumber": -1,
         "points": -1
@@ -63,6 +64,7 @@ var CommentThread = Backbone.Model.extend({
             expiration: response["expiration"] ? new Date(response["expiration"]) : null,
             roadtrip: response["categories"].indexOf('road-trip') > -1,
             showcase: response["categories"].indexOf('showcase') > -1,
+            page: response["page"],
             claimedBy: response["claimedBy"],
             points: response["points"],
             itemNumber: response["item_number"]

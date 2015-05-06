@@ -61,6 +61,7 @@ var CommentButtonView = Backbone.View.extend({
             "description": itemHeader.get("text"),
             "points": itemHeader.get("points"),
             "timed": itemHeader.get("expiration") !== null,
+            "page": itemHeader.get("page"),
             "roadtrip": itemHeader.get("roadtrip"),
             "showcase": itemHeader.get("showcase")
         }));
