@@ -86,6 +86,9 @@ var CommentThread = Backbone.Model.extend({
         this.attributes['serverPolling'] = setInterval(_.bind(function() {
             this.get('comments').fetch({delete: false});
         }, this), 10000);
+        this.listenTo(this.get("header"), "change", _.bind(function() {
+            this.trigger("change");
+        }, this));
     },
 
     teardownComments: function() {

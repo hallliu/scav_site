@@ -74,6 +74,13 @@ var CommentButtonView = Backbone.View.extend({
             else if (minutes_until_expiration < 240)
                 this.$(".glyphicon-time").css("color", "yellow");
         }
+        if (itemHeader.get("done") === true) {
+            this.$("button").addClass("btn-success");
+        } else if (itemHeader.get("claimedBy") !== null) {
+            this.$("button").addClass("btn-info");
+        } else {
+            this.$("button").addClass("btn-primary");
+        }
         return this;
     },
 
