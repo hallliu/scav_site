@@ -59,6 +59,7 @@ var CommentButtonView = Backbone.View.extend({
         this.$el.html(this.template({
             "threadNum": this.commentThread.get("itemNumber"),
             "description": itemHeader.get("text"),
+            "points": itemHeader.get("points"),
             "timed": itemHeader.get("expiration") !== null,
             "roadtrip": itemHeader.get("roadtrip"),
             "showcase": itemHeader.get("showcase")

@@ -118,6 +118,7 @@ def filtered_items(request):
         'title': str(item_obj.number) + ': ' + item_obj.description[:30],
         'description': item_obj.description,
         'item_number': item_obj.number,
+        'points': item_obj.points,
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
         'categories': list(item_obj.categories.values_list('category_name', flat=True)),
         'claimedBy': item_obj.claimed.username if item_obj.claimed is not None else None,
