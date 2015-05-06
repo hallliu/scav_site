@@ -67,7 +67,8 @@ var CommentThread = Backbone.Model.extend({
             page: response["page"],
             claimedBy: response["claimedBy"],
             points: response["points"],
-            itemNumber: response["item_number"]
+            itemNumber: response["item_number"],
+            categories: response["categories"]
         });
 
         result["itemNumber"] = response["item_number"];

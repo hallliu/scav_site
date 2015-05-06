@@ -214,6 +214,7 @@ var ItemDescriptionView = Backbone.View.extend({
         var template_options = {
             item_description: this.thread_header.get("text"),
             claimedBy: this.thread_header.get("claimedBy"),
+            categories: this.thread_header.get("categories"),
             expires: (this.thread_header.get("expiration") === null) ? null : this.thread_header.get("expiration").toLocaleString()
         };
         this.$el.html(this.template(template_options));
