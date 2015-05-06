@@ -187,6 +187,12 @@
                     <% if (claimedBy !== null) { %> Remove <% } else { %> Claim item <% } %>
                 </button>
             </p>
+            <p>
+                <% if (done === true) { %>Item complete<% } %>
+                <button class="btn btn-default completed-item-toggle">
+                    <% if (done === true) { %> Undo <% } else { %> Mark as done <% } %>
+                </button>
+            </p>
             <% if (expires !== null) { %><p>Expires on <%= expires %></p><% } %>
             <p>Categories: <% print(categories.join(", ")) %></p>
         </script>

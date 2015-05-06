@@ -28,6 +28,7 @@ var ThreadHeader = Backbone.Model.extend({
         "roadtrip": false,
         "showcase": false,
         "page": -1,
+        "done": false,
         "claimedBy": null,
         "itemNumber": -1,
         "points": -1
@@ -66,6 +67,7 @@ var CommentThread = Backbone.Model.extend({
             showcase: response["categories"].indexOf('showcase') > -1,
             page: response["page"],
             claimedBy: response["claimedBy"],
+            done: response["done"],
             points: response["points"],
             itemNumber: response["item_number"],
             categories: response["categories"]

@@ -119,6 +119,7 @@ def filtered_items(request):
         'description': item_obj.description,
         'item_number': item_obj.number,
         'points': item_obj.points,
+        'done': item_obj.done,
         'page': item_obj.page,
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
         'categories': list(item_obj.categories.values_list('category_name', flat=True)),
@@ -179,8 +180,6 @@ def comments_on_item(request, item_number):
 def claim_item_view(request, item_number):
     try:
         item_in_question = Item.objects.get(number=item_number)
-    except KeyError:
-        return HttpResponse("asdadfafa", content_type="text/plain", status=500)
     except Item.DoesNotExist:
         return HttpResponse("Invalid item number: {}".format(request.POST["item-number"]), status=500,
                             content_type="text/plain")
@@ -206,6 +205,18 @@ def claim_item_view(request, item_number):
                 item_in_question.claimed = None
                 item_in_question.save()
                 return HttpResponse(json.dumps({"claimedBy": None}), content_type="application/json")
+
+
+def mark_item_done_view(request, item_number):
+    try:
+        item_in_question = Item.objects.get(number=item_number)
+    except Item.DoesNotExist:
+        return HttpResponse("Invalid item number: {}".format(request.POST["item-number"]), status=500,
+                            content_type="text/plain")
+
+    item_in_question.done = not item_in_question.done
+    item_in_question.save()
+    return HttpResponse(json.dumps({"done": item_in_question.done}), content_type="application/json")
 
 
 def item(request, item_number):

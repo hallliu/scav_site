@@ -215,9 +215,23 @@ var ItemDescriptionView = Backbone.View.extend({
             item_description: this.thread_header.get("text"),
             claimedBy: this.thread_header.get("claimedBy"),
             categories: this.thread_header.get("categories"),
+            done: this.thread_header.get("done"),
             expires: (this.thread_header.get("expiration") === null) ? null : this.thread_header.get("expiration").toLocaleString()
         };
         this.$el.html(this.template(template_options));
+        this.$(".completed-item-toggle").click(_.bind(function() {
+            var options = {
+                method: "POST",
+                headers: {'X-CSRFToken': $.cookie("csrftoken")},
+                success: _.bind(function(resp) {
+                    this.thread_header.set("done", resp["done"]);
+                }, this),
+                error: function(resp) {
+                    alert(resp.responseText);
+                }
+            };
+            $.ajax("/scav_board/api/complete_item/" + this.thread_header.get("itemNumber"), options);
+        }, this));
         this.$(".claim-item-toggle").click(_.bind(function() {
             var options = {
                 method: "POST",
