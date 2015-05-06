@@ -9,7 +9,7 @@ var PageView = Backbone.View.extend({
         this.threads.fetch({success: _.bind(function() {
             this.initialRender();
             this.listenTo(this.threads, "add", this.addThread);
-            this.pollTimeout = setTimeout(_.bind(function() {
+            this.pollTimeout = setInterval(_.bind(function() {
                 this.threads.fetch();
             }, this), 10000);
 
