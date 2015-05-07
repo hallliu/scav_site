@@ -20,7 +20,7 @@ class Item(models.Model):
     claimed = models.ForeignKey(User, default=None, null=True, blank=True)
     claimed_at = models.DateTimeField(blank=True, default=None, null=True)
     done = models.BooleanField(default=False)
-    points = models.CharField(max_length=64, default="")
+    points = models.CharField(max_length=512, default="")
     categories = models.ManyToManyField(ItemCategory, blank=True)
 
     def __unicode__(self):
