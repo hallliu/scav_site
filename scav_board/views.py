@@ -20,6 +20,10 @@ def homepage_view(request):
     return render(request, 'scav_board/index_page.html', context={'page_list': pages_available})
 
 
+def help_page_view(request):
+    return render(request, 'scav_board/help_page.html')
+
+
 @ensure_csrf_cookie
 def registration_view(request):
     if request.method == 'GET':
@@ -94,13 +98,17 @@ def add_item_view(request):
 def filtered_items(request):
     if request.method != 'GET':
         return HttpResponse("POSTing to this URL is not supported.", content_type='text/plain', status=503)
-    page = request.GET.get('page')
+    pages = request.GET.getlist('page')
     keywords = request.GET.getlist('keyword')
     categories = request.GET.getlist('category')
 
     item_objs_to_return = Item.objects.all()
-    if page is not None:
-        item_objs_to_return = item_objs_to_return.filter(page=int(page))
+    page_orqs = []
+    for pg in pages:
+        page_orqs.append(Q(description__icontains=pg))
+    if len(page_orqs):
+        item_objs_to_return = item_objs_to_return.filter(reduce(or_, page_orqs))
+
     keyword_orqs = []
     for kwd in keywords:
         keyword_orqs.append(Q(description__icontains=kwd))

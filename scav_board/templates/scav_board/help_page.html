@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    {% load staticfiles %}
+    <link rel="shortcut icon" href="{% static "scav_board/icons/favicon.ico" %}">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="{% static "scav_board/icons/favicon.ico" %}">
+    <link rel="icon" type="image/png" sizes="196x196" href="{% static "scav_board/icons/favicon-192.png" %}">
+    <link rel="icon" type="image/png" sizes="160x160" href="{% static "scav_board/icons/favicon-160.png" %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static "scav_board/icons/favicon-96.png" %}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{% static "scav_board/icons/favicon-64.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static "scav_board/icons/favicon-32.png" %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static "scav_board/icons/favicon-16.png" %}">
+    <link rel="apple-touch-icon" href="{% static "scav_board/icons/favicon-57.png" %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static "scav_board/icons/favicon-114.png" %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static "scav_board/icons/favicon-72.png" %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static "scav_board/icons/favicon-144.png" %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static "scav_board/icons/favicon-60.png" %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static "scav_board/icons/favicon-120.png" %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static "scav_board/icons/favicon-76.png" %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static "scav_board/icons/favicon-152.png" %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static "scav_board/icons/favicon-180.png" %}">
+    <title>Help page for the Scav Site</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        body {
+            margin:40px auto;
+            max-width:650px;
+            line-height:1.6;
+            font-size:18px;
+            color:#444;
+            padding:0 10px
+        }
+
+        h1,h2,h3 {
+            line-height:1.2
+        }
+
+        .footer {
+            height: 30px;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>The Help Page for the Scav Page</h1>
+<h2>Viewing and commenting on items</h2>
+<p>To view an item, click on it. To go back to the listing of items, either click/tap the x at the top right,
+    click/tap outside the item display, or use the back button on your browser.</p>
+<p>To comment on an item, scroll to the bottom of the item's comment thread and enter your comment. If you wish to format
+    your comment, you can use the standard HTML formatting tools as well as Javascript. Please don't go too overboard with
+    this, or your comment will be subject to deletion.</p>
+<p>If you are not logged in, a warning message may appear when you try to comment. If this is the case, just hit the
+    comment button again and your comment will be submitted anonymously.</p>
+<h2>Registration</h2>
+<p>You may register an account to identify yourself on the site. No critical functions require registration, though it is
+    encouraged. To reach the registration page, either [click here]{http://macscav.com/registration/} or go through the
+    login button at the top left of the main page. All fields in the registration are required, and you must tick the
+    checkbox at the bottom of the page to verify your humanity.</p>
+<h2>Adding items</h2>
+<p>You can reach the item adding page [here]{http://macscav.com/add_item/} or through the footer on the main page.
+    Fill out all the relevant fields for an item, and you will be prompted if you failed to fill out a required field.</p>
+<h2>Searching</h2>
+<p>You may search by page, category, or keyword. To search by page (e.g. page <code>N</code>), enter <code>#page:N</code> into the search bar. To search for
+    items across multiple pages (e.g. pages <code>N</code> and <code>M</code>), enter <code>#page:N #page:M</code> into the search bar</p>
+<p>To search by category, use <code>#category:category name</code>. If you enter multiple categories, items matching any of these
+    categories will be returned. The following categories are currently implemented:</p>
+<ul>
+    <li><code>road-trip</code></li>
+    <li><code>showcase</code></li>
+    <li><code>food</code></li>
+    <li><code>music</code></li>
+    <li><code>video</code></li>
+    <li><code>science</code></li>
+    <li><code>arts</code></li>
+</ul>
+<p>To search by keyword, simply type the keyword into the search bar. If you enter multiple keywords separated by spaces,
+    items matching any of the keywords will be returned. This means that if you search for <code>a flaming tiger</code>, your search
+    results will contain all items containing the letter <code>a</code>.</p>
+<p>Finally, these three types of queries carry an AND relation between each other. In other words, if you search for
+    <code>#page:4 #page:5 #category:food #category:science hydrogen</code>, the search results will be all items from either page
+    4 or page 5, which have either food or science as a category, and contain the word <code>hydrogen</code>.</p>
+
+<footer class="footer">
+    <a href="/scav_board">Click here</a> to go back to the main page
+</footer>
+</body>
