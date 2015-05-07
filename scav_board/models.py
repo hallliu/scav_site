@@ -21,7 +21,7 @@ class Item(models.Model):
     claimed_at = models.DateTimeField(blank=True, default=None, null=True)
     done = models.BooleanField(default=False)
     points = models.CharField(max_length=64, default="")
-    categories = models.ManyToManyField(ItemCategory)
+    categories = models.ManyToManyField(ItemCategory, blank=True)
 
     def __unicode__(self):
         return "Item {}: {}".format(self.number, self.description[:20])
