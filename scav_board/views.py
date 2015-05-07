@@ -105,7 +105,7 @@ def filtered_items(request):
     item_objs_to_return = Item.objects.all()
     page_orqs = []
     for pg in pages:
-        page_orqs.append(Q(description__icontains=pg))
+        page_orqs.append(Q(page=int(pg)))
     if len(page_orqs):
         item_objs_to_return = item_objs_to_return.filter(reduce(or_, page_orqs))
 
