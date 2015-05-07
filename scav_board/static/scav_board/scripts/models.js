@@ -67,6 +67,7 @@ var CommentThread = Backbone.Model.extend({
             showcase: response["categories"].indexOf('showcase') > -1,
             page: response["page"],
             claimedBy: response["claimedBy"],
+            claimedAt: response["claimedAt"] ? new Date(response["claimedAt"]): null,
             done: response["done"],
             points: response["points"],
             itemNumber: response["item_number"],

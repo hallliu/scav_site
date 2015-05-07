@@ -79,7 +79,7 @@ var CommentButtonView = Backbone.View.extend({
         } else if (itemHeader.get("claimedBy") !== null) {
             this.$("button").addClass("btn-info");
         } else {
-            this.$("button").addClass("btn-primary");
+            this.$("button").addClass("btn-warning");
         }
         return this;
     },
@@ -221,6 +221,7 @@ var ItemDescriptionView = Backbone.View.extend({
         var template_options = {
             item_description: this.thread_header.get("text"),
             claimedBy: this.thread_header.get("claimedBy"),
+            claimedAt: this.thread_header.get("claimedAt") ? this.thread_header.get("claimedAt").toLocaleString() : null,
             categories: this.thread_header.get("categories"),
             done: this.thread_header.get("done"),
             expires: (this.thread_header.get("expiration") === null) ? null : this.thread_header.get("expiration").toLocaleString()
@@ -244,10 +245,14 @@ var ItemDescriptionView = Backbone.View.extend({
                 method: "POST",
                 headers: {'X-CSRFToken': $.cookie("csrftoken")},
                 success: _.bind(function(resp) {
-                    if (resp["claimedBy"] !== null)
+                    if (resp["claimedBy"] !== null) {
                         this.thread_header.set("claimedBy", resp["claimedBy"]);
-                    else
+                        this.thread_header.set("claimedAt", new Date(resp["claimedAt"]));
+                    }
+                    else {
                         this.thread_header.set("claimedBy", null);
+                        this.thread_header.set("claimedAt", null);
+                    }
                 }, this),
                 error: function(resp) {
                     alert(resp.responseText);

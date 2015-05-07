@@ -182,7 +182,7 @@
         <script type="text/template" id="item-description-template">
             <p><%= item_description %></p>
             <p>
-                <% if (claimedBy !== null) { %> Claimed by <%= claimedBy %> <% } %>
+                <% if (claimedBy !== null) { %> Claimed by <%= claimedBy %> at <%= claimedAt %>. <% } %>
                 <button class="btn btn-default claim-item-toggle">
                     <% if (claimedBy !== null) { %> Remove <% } else { %> Claim item <% } %>
                 </button>

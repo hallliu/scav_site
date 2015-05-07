@@ -18,6 +18,7 @@ class Item(models.Model):
     description = models.TextField()
     expires = models.DateTimeField(blank=True, default=None, null=True)
     claimed = models.ForeignKey(User, default=None, null=True, blank=True)
+    claimed_at = models.DateTimeField(blank=True, default=None, null=True)
     done = models.BooleanField(default=False)
     points = models.CharField(max_length=64, default="")
     categories = models.ManyToManyField(ItemCategory)

@@ -122,6 +122,7 @@ def filtered_items(request):
         'done': item_obj.done,
         'page': item_obj.page,
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
+        'claimedAt': item_obj.claimed_at.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.claimed_at is not None else '',
         'categories': list(item_obj.categories.values_list('category_name', flat=True)),
         'claimedBy': item_obj.claimed.username if item_obj.claimed is not None else None,
     } for item_obj in item_objs_to_return])
@@ -183,16 +184,23 @@ def claim_item_view(request, item_number):
     except Item.DoesNotExist:
         return HttpResponse("Invalid item number: {}".format(request.POST["item-number"]), status=500,
                             content_type="text/plain")
+    now = datetime.datetime.utcnow()
 
     if item_in_question.claimed is None:
         if request.user.id is None:
             item_in_question.claimed = User.objects.get(username="anonymous")
+            item_in_question.claimed_at = now
             item_in_question.save()
-            return HttpResponse(json.dumps({"claimedBy": "anonymous"}), content_type="application/json")
+            return HttpResponse(json.dumps({"claimedBy": "anonymous",
+                                            "claimedAt": now.strftime("%Y-%m-%dT%H:%M:%SZ")}),
+                                content_type="application/json")
         else:
             item_in_question.claimed = request.user
+            item_in_question.claimed_at = now
             item_in_question.save()
-            return HttpResponse(json.dumps({"claimedBy": request.user.username}), content_type="application/json")
+            return HttpResponse(json.dumps({"claimedBy": "anonymous",
+                                            "claimedAt": now.strftime("%Y-%m-%dT%H:%M:%SZ")}),
+                                content_type="application/json")
     else:
         if item_in_question.claimed.username == "anonymous":
             item_in_question.claimed = None
