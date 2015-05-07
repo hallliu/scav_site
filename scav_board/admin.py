@@ -3,7 +3,7 @@ from .models import *
 
 
 class ItemAdmin(admin.ModelAdmin):
-    search_fields = ['description']
+    search_fields = ['description', 'page']
 
 
 admin.site.register(ItemCategory)
