@@ -80,6 +80,7 @@ var CommentButtonView = Backbone.View.extend({
             this.$("button").addClass("btn-info");
         } else {
             this.$("button").addClass("btn-warning");
+            this.$("span")[0].css("color", "#1a1a54")
         }
         return this;
     },
