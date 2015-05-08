@@ -1,29 +1,41 @@
 var make_search_query = function(search_string) {
-    var page = null;
+    var pages = [];
     var keywords = [];
     var categories = [];
+    var claimedBys = [];
+    var expireHours = null;
     var tokens = search_string.split(" ");
     tokens.forEach(function(token) {
         if (token.charAt(0) === '#') {
             var sepk = token.split(":");
             if (sepk[0] === "#page") {
-                page = sepk[1];
+                pages.push(sepk[1]);
             } else if (sepk[0] === "#category") {
                 categories.push(sepk[1]);
+            } else if (sepk[0] === "#expires") {
+                expireHours = sepk[1];
+            } else if (sepk[0] === "#claimedBy") {
+                claimedBys.push(sepk[1]);
             }
         } else {
             keywords.push(token);
         }
     });
     var queries = [];
-    if (page !== null) {
-        queries.push("page=" + page);
+    if (expireHours !== null) {
+        queries.push("expiresBefore=" + expireHours);
     }
+    pages.forEach(function(kwd) {
+        queries.push("page=" + kwd);
+    });
     keywords.forEach(function(kwd) {
         queries.push("keyword=" + kwd);
     });
     categories.forEach(function(cat) {
         queries.push("category=" + cat);
+    });
+    claimedBys.forEach(function(cat) {
+        queries.push("claimedBy=" + cat);
     });
     return queries.join('&');
 };

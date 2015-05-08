@@ -101,8 +101,15 @@ def filtered_items(request):
     pages = request.GET.getlist('page')
     keywords = request.GET.getlist('keyword')
     categories = request.GET.getlist('category')
+    claimants = request.GET.getlist('claimedBy')
+    expires_before = request.GET.get('expiresBefore')
 
     item_objs_to_return = Item.objects.all()
+    if expires_before is not None:
+        now = datetime.datetime.now()
+        future_date = now + datetime.timedelta(hours=int(expires_before))
+        item_objs_to_return = item_objs_to_return.filter(expires__gte=now, expires__lt=future_date)
+
     page_orqs = []
     for pg in pages:
         page_orqs.append(Q(page=int(pg)))
@@ -120,6 +127,12 @@ def filtered_items(request):
         category_orqs.append(Q(categories__category_name=cat))
     if len(category_orqs):
         item_objs_to_return = item_objs_to_return.filter(reduce(or_, category_orqs))
+
+    claimant_orqs = []
+    for username in claimants:
+        claimant_orqs.append(Q(claimed__username=username))
+    if len(claimant_orqs):
+        item_objs_to_return = item_objs_to_return.filter(reduce(or_, claimant_orqs))
 
     response = json.dumps([{
         'id': item_obj.id,
@@ -197,6 +210,7 @@ def claim_item_view(request, item_number):
 
     if item_in_question.claimed is None:
         if request.user.id is None:
+            import ipdb;ipdb.set_trace()
             item_in_question.claimed = User.objects.get(username="anonymous")
             item_in_question.claimed_at = now
             item_in_question.save()
@@ -207,7 +221,7 @@ def claim_item_view(request, item_number):
             item_in_question.claimed = request.user
             item_in_question.claimed_at = now
             item_in_question.save()
-            return HttpResponse(json.dumps({"claimedBy": "anonymous",
+            return HttpResponse(json.dumps({"claimedBy": request.user.username,
                                             "claimedAt": now.strftime("%Y-%m-%dT%H:%M:%SZ")}),
                                 content_type="application/json")
     else:
