@@ -129,6 +129,7 @@ def filtered_items(request):
         'points': item_obj.points,
         'done': item_obj.done,
         'page': item_obj.page,
+        'numComments': item_obj.comment_set.count(),
         'expiration': item_obj.expires.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.expires is not None else '',
         'claimedAt': item_obj.claimed_at.strftime('%Y-%m-%dT%H:%M:%SZ') if item_obj.claimed_at is not None else '',
         'categories': list(item_obj.categories.values_list('category_name', flat=True)),
