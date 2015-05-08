@@ -68,6 +68,7 @@ var CommentThread = Backbone.Model.extend({
             page: response["page"],
             claimedBy: response["claimedBy"],
             claimedAt: response["claimedAt"] ? new Date(response["claimedAt"]): null,
+            numComments: response["numComments"],
             done: response["done"],
             points: response["points"],
             itemNumber: response["item_number"],
@@ -82,7 +83,7 @@ var CommentThread = Backbone.Model.extend({
     // This function goes and actually creates the contents of the comment thread, then starts polling
     // for changes on the database.
     initializeComments: function(success_callback) {
-        this.set("comments", new CommentCollection([], this.get("itemNumber")));
+        this.set({"comments": new CommentCollection([], this.get("itemNumber"))});
         this.get('comments').fetch({success: success_callback});
         this.attributes['serverPolling'] = setInterval(_.bind(function() {
             this.get('comments').fetch({delete: false});

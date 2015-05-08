@@ -63,7 +63,8 @@ var CommentButtonView = Backbone.View.extend({
             "timed": itemHeader.get("expiration") !== null,
             "page": itemHeader.get("page"),
             "roadtrip": itemHeader.get("roadtrip"),
-            "showcase": itemHeader.get("showcase")
+            "showcase": itemHeader.get("showcase"),
+            "numComments": itemHeader.get("numComments")
         }));
         if (itemHeader.get("expiration") !== null) {
             var minutes_until_expiration = (new Date() - itemHeader.get("expiration")) / -60000;
@@ -80,6 +81,7 @@ var CommentButtonView = Backbone.View.extend({
             this.$("button").addClass("btn-info");
         } else {
             this.$("button").addClass("btn-warning");
+            this.$("span").first().css("color", "#1a1a54")
         }
         return this;
     },
@@ -144,6 +146,8 @@ var CommentThreadView = Backbone.View.extend({
         var newCommentView = new CommentView({model: comment});
         newCommentView.listenTo(this, "close_thread", newCommentView.remove);
         this.comments.append(newCommentView.render().$el);
+        var this_tc_comment_count = this.commentThread.get("header").get("numComments");
+        this.commentThread.get("header").set({"numComments": this_tc_comment_count + 1});
         this.checkCommentFolding();
     },
 
@@ -232,7 +236,7 @@ var ItemDescriptionView = Backbone.View.extend({
                 method: "POST",
                 headers: {'X-CSRFToken': $.cookie("csrftoken")},
                 success: _.bind(function(resp) {
-                    this.thread_header.set("done", resp["done"]);
+                    this.thread_header.set({"done": resp["done"]});
                     if (resp["done"]) {
                         var cursor_url = $("#parakeet").attr("src");
                         $(document.body).css("cursor", "url(" + cursor_url + "), auto");
@@ -253,12 +257,12 @@ var ItemDescriptionView = Backbone.View.extend({
                 headers: {'X-CSRFToken': $.cookie("csrftoken")},
                 success: _.bind(function(resp) {
                     if (resp["claimedBy"] !== null) {
-                        this.thread_header.set("claimedBy", resp["claimedBy"]);
-                        this.thread_header.set("claimedAt", new Date(resp["claimedAt"]));
+                        this.thread_header.set({"claimedBy": resp["claimedBy"]});
+                        this.thread_header.set({"claimedAt": new Date(resp["claimedAt"])});
                     }
                     else {
-                        this.thread_header.set("claimedBy", null);
-                        this.thread_header.set("claimedAt", null);
+                        this.thread_header.set({"claimedBy": null});
+                        this.thread_header.set({"claimedAt": null});
                     }
                 }, this),
                 error: function(resp) {
