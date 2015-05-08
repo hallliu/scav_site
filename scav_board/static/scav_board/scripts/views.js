@@ -233,6 +233,13 @@ var ItemDescriptionView = Backbone.View.extend({
                 headers: {'X-CSRFToken': $.cookie("csrftoken")},
                 success: _.bind(function(resp) {
                     this.thread_header.set("done", resp["done"]);
+                    if (resp["done"]) {
+                        var cursor_url = $("#parakeet").attr("src");
+                        $(document.body).css("cursor", "url(" + cursor_url + "), auto");
+                        setTimeout(function() {
+                            $(document.body).css("cursor", "");
+                        }, 5000);
+                    }
                 }, this),
                 error: function(resp) {
                     alert(resp.responseText);
@@ -248,11 +255,6 @@ var ItemDescriptionView = Backbone.View.extend({
                     if (resp["claimedBy"] !== null) {
                         this.thread_header.set("claimedBy", resp["claimedBy"]);
                         this.thread_header.set("claimedAt", new Date(resp["claimedAt"]));
-                        var cursor_url = $("#parakeet").attr("src");
-                        $(document.body).css("cursor", "url(" + cursor_url + "), auto")
-                        setTimeout(function() {
-                            $(document.body).css("cursor", "");
-                        }, 5000);
                     }
                     else {
                         this.thread_header.set("claimedBy", null);
