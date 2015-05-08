@@ -248,6 +248,11 @@ var ItemDescriptionView = Backbone.View.extend({
                     if (resp["claimedBy"] !== null) {
                         this.thread_header.set("claimedBy", resp["claimedBy"]);
                         this.thread_header.set("claimedAt", new Date(resp["claimedAt"]));
+                        var cursor_url = $("#parakeet").attr("src");
+                        $(document.body).css("cursor", "url(" + cursor_url + "), auto")
+                        setTimeout(function() {
+                            $(document.body).css("cursor", "");
+                        }, 5000);
                     }
                     else {
                         this.thread_header.set("claimedBy", null);
